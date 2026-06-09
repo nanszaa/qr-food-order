@@ -1,77 +1,80 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Daftar Meja</title>
 </head>
+
 <body>
 
 
 
-<h1>Daftar Meja</h1>
+    <h1>Daftar Meja</h1>
 
-@forelse($tables as $table)
+    @forelse($tables as $table)
 
-  @php
+        @php
 
-    $occupied = false;
+            $occupied = false;
 
-    foreach ($table->customerSessions as $session) {
+            foreach ($table->customerSessions as $session) {
 
-        foreach ($session->orders as $order) {
+                foreach ($session->orders as $order) {
 
-            if (
-                in_array(
-                    $order->order_status,
-                    ['pending', 'processing']
-                )
-            ) {
-                $occupied = true;
+                    if (
+                        in_array(
+                            $order->order_status,
+                            ['pending', 'processing']
+                        )
+                    ) {
+                        $occupied = true;
+                    }
+                }
             }
-        }
-    }
 
-@endphp
+        @endphp
 
-    <hr>
+        <hr>
 
-    <p>
-        Meja :
-        {{ $table->table_number }}
-    </p>
+        <p>
+            Meja :
+            {{ $table->table_number }}
+        </p>
 
-    <p>
-    Status :
+        <p>
+            Status :
 
-    @if($occupied)
+            @if($occupied)
 
-        Occupied
+                Occupied
 
-    @else
+            @else
 
-        Available
+                Available
 
-    @endif
-</p>
+            @endif
+        </p>
 
-    <p>
-        QR Token :
-        {{ $table->qr_token }}
-    </p>
+        <p>
+            QR Token :
+            {{ $table->qr_token }}
+        </p>
 
-    <p>
-        Aktif :
-        {{ $table->is_active ? 'Ya' : 'Tidak' }}
-    </p>
+        <p>
+            Aktif :
+            {{ $table->is_active ? 'Ya' : 'Tidak' }}
+        </p>
 
-  
 
-@empty
 
-    <p>
-        Belum ada meja
-    </p>
+    @empty
 
-@endforelse
+        <p>
+            Belum ada meja
+        </p>
+
+    @endforelse
 
 </body>
+
 </html>
