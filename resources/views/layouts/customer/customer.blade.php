@@ -24,7 +24,7 @@
             ->sum('qty');
     @endphp
 
-    <div class="max-w-md mx-auto">
+    <div class="mx-auto">
 
         <nav class="sticky top-0 z-50 w-full bg-white px-4 py-3 flex items-center justify-between shadow-sm">
             <!-- Left Side -->

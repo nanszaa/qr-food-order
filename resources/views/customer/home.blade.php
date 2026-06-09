@@ -15,22 +15,20 @@
                 <h1 class="text-white text-2xl font-extrabold tracking-tight leading-tight">
                     Warkop KUY
                 </h1>
-                <p class="text-brand-300 text-xs font-medium mt-0.5 flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                    @if($table)
-                        Meja {{ $table->table_number }}
-                    @else
-                        Belum Scan Meja
-                    @endif
-                </p>
+                
             </div>
  
-            <div class="bg-brand-300 text-brand-700 px-4 py-1.5 rounded-pill text-sm font-bold">
-                ● Buka
-            </div>
+            <p class="text-brand-300 text-xs font-medium mt-0.5 flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                @if($table)
+                    Meja {{ $table->table_number }}
+                @else
+                    Belum Scan Meja
+                @endif
+            </p>
         </div>
  
         {{-- Search --}}
@@ -91,16 +89,16 @@
                class="group bg-white rounded-2xl shadow-card hover:shadow-card-hover overflow-hidden border border-card-border transition-all duration-200 active:scale-[0.98] block">
  
                 {{-- Gambar --}}
-                <div class="relative overflow-hidden">
+                <div class="relative overflow-hidden aspect-[4/3]">
                     <img
                         src="https://placehold.co/400x300/b7e4c7/1b4332?text={{ urlencode($menu->name) }}"
                         alt="{{ $menu->name }}"
-                        class="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     >
  
                     @if($menu->is_best_seller)
-                    <div class="absolute top-2 left-2 bg-danger text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow">
-                        🔥 Best Seller
+                    <div class="absolute top-2 left-2 bg-danger text-white text-xs px-2.5 py-1 rounded-lg">
+                        Best Seller
                     </div>
                     @endif
                 </div>
