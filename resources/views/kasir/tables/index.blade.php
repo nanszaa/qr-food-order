@@ -5,9 +5,32 @@
 </head>
 <body>
 
+
+
 <h1>Daftar Meja</h1>
 
 @forelse($tables as $table)
+
+  @php
+
+    $occupied = false;
+
+    foreach ($table->customerSessions as $session) {
+
+        foreach ($session->orders as $order) {
+
+            if (
+                in_array(
+                    $order->order_status,
+                    ['pending', 'processing']
+                )
+            ) {
+                $occupied = true;
+            }
+        }
+    }
+
+@endphp
 
     <hr>
 
@@ -15,6 +38,20 @@
         Meja :
         {{ $table->table_number }}
     </p>
+
+    <p>
+    Status :
+
+    @if($occupied)
+
+        Occupied
+
+    @else
+
+        Available
+
+    @endif
+</p>
 
     <p>
         QR Token :
@@ -25,6 +62,8 @@
         Aktif :
         {{ $table->is_active ? 'Ya' : 'Tidak' }}
     </p>
+
+  
 
 @empty
 
