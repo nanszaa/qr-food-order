@@ -28,7 +28,7 @@
 
         <nav class="sticky top-0 z-50 w-full bg-white px-4 py-3 flex items-center justify-between shadow-sm">
             <!-- Left Side -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
 
                 <!-- Return back -->
                 <button onclick="history.back()">
