@@ -7,7 +7,7 @@
     <div class="min-h-screen bg-brand-50 font-sans">
 
         {{-- ===== STICKY HEADER ===== --}}
-        <div class="sticky top-0 z-30 bg-brand-gradient px-5 pt-5 pb-4 shadow-header rounded-b-3xl">
+        <div class="sticky top-0 z-30 bg-brand-gradient px-5 pt-5 pb-4 shadow-header">
 
             {{-- Top bar --}}
             <div class="flex justify-between items-center">
@@ -18,7 +18,7 @@
 
                 </div>
 
-                <p class="text-brand-300 text-xs font-medium mt-0.5 flex items-center gap-1">
+                <p class="bg-brand-300 text-black px-3 py-2 text-xs font-medium mt-0.5 flex items-center gap-1 rounded-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

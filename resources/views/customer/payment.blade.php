@@ -4,71 +4,102 @@
 
 @section('content')
 
+<div class="min-h-screen bg-brand-50 font-sans">
 
-<div class="p-6">
+    {{-- ===== HEADER ===== --}}
+    <div class="bg-brand-gradient px-5 pt-6 pb-5 rounded-b-3xl shadow-header">
+        <h1 class="text-white text-2xl font-extrabold tracking-tight">Pembayaran</h1>
+        <p class="text-brand-300 text-xs mt-1">Selesaikan pembayaran untuk mengonfirmasi pesanan</p>
+    </div>
 
-    <h1 class="text-2xl font-bold mb-4">
-        Pembayaran QRIS
-    </h1>
+    <div class="px-4 pt-5 pb-10 space-y-4">
 
-    <p class="mb-2">
-        No Pesanan:
-        <span class="font-semibold">
-            {{ $order->order_code }}
-        </span>
-    </p>
+        {{-- ===== INFO PESANAN ===== --}}
+        <div class="bg-white rounded-2xl border border-card-border shadow-card p-4">
 
-    <p class="mb-6">
-        Total:
-        <span class="font-semibold text-green-600">
-            Rp {{ number_format($order->total_price, 0, ',', '.') }}
-        </span>
-    </p>
+            <h2 class="text-neutral-heading text-sm font-bold mb-3">🧾 Detail Pesanan</h2>
 
-    <button
-        id="pay-button"
-        class="w-full bg-green-500 text-white py-3 rounded-xl font-semibold"
-    >
-        Buka QRIS Midtrans
-    </button>
+            <div class="space-y-2.5">
+                <div class="flex justify-between items-center">
+                    <span class="text-neutral-hint text-xs">No. Pesanan</span>
+                    <span class="text-neutral-heading text-sm font-bold tracking-wide">
+                        {{ $order->order_code }}
+                    </span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-neutral-hint text-xs">Metode</span>
+                    <span class="bg-brand-100 text-brand-600 text-xs font-semibold px-3 py-1 rounded-pill">
+                        📱 QRIS
+                    </span>
+                </div>
+                <div class="border-t border-card-border pt-2.5 flex justify-between items-center">
+                    <span class="text-neutral-heading text-sm font-bold">Total Pembayaran</span>
+                    <span class="text-brand-600 text-lg font-extrabold">
+                        Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                    </span>
+                </div>
+            </div>
 
-    <p class="text-center text-xs text-gray-500 mt-4">
-        Sandbox Mode (Development)
-    </p>
+        </div>
+
+        {{-- ===== PANDUAN ===== --}}
+        <div class="bg-brand-100 rounded-2xl border border-brand-200 p-4">
+            <h2 class="text-brand-700 text-sm font-bold mb-2.5">📋 Cara Bayar</h2>
+            <ol class="space-y-1.5 text-brand-700 text-xs list-none">
+                <li class="flex items-start gap-2">
+                    <span class="bg-brand-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                    Tekan tombol <strong>"Buka QRIS"</strong> di bawah
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="bg-brand-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                    Scan QR code menggunakan aplikasi dompet digital
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="bg-brand-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                    Konfirmasi pembayaran di aplikasimu
+                </li>
+            </ol>
+        </div>
+
+        {{-- ===== TOMBOL BAYAR ===== --}}
+        <button
+            id="pay-button"
+            class="w-full bg-brand-gradient text-white py-4 rounded-2xl font-bold text-sm shadow-card-hover hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+        >
+            <span>📱</span>
+            <span>Buka QRIS Midtrans</span>
+        </button>
+
+        {{-- Sandbox badge --}}
+        <p class="text-center text-xs text-neutral-hint flex items-center justify-center gap-1.5">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-neutral-hint"></span>
+            Sandbox Mode (Development)
+        </p>
+
+    </div>
 
 </div>
 
 <script>
-
-document
-    .getElementById('pay-button')
-    .addEventListener('click', function () {
+    document.getElementById('pay-button').addEventListener('click', function () {
 
         snap.pay('{{ $payment->payment_token }}', {
 
-            onSuccess: function(result) {
-
-                window.location.href =
-                    "/payment/success/{{ $order->order_id }}";
-
+            onSuccess: function (result) {
+                window.location.href = "/payment/success/{{ $order->order_id }}";
             },
 
-            onPending: function(result) {
-
+            onPending: function (result) {
                 alert('Menunggu pembayaran');
-
             },
 
-            onError: function(result) {
-
+            onError: function (result) {
                 alert('Pembayaran gagal');
-
             }
 
         });
 
     });
-
 </script>
 
 @endsection

@@ -26,7 +26,7 @@
 
     <div class="mx-auto">
 
-        <nav class="bg-brand-gradient sticky top-0 z-50 w-full px-4 py-3 flex items-center justify-between shadow-sm">
+        <nav class="bg-white sticky top-0 z-50 w-full px-4 py-3 flex items-center justify-between shadow-sm">
             <!-- Left Side -->
             <div class="flex items-center gap-2">
 
@@ -48,7 +48,7 @@
             <!-- Right Side -->
             <a
                 href="{{ route('cart.index') }}"
-                class="relative w-10 h-10 rounded-full bg-lime-500 flex items-center justify-center">
+                class="relative w-10 h-10 rounded-full bg-brand-gradient flex items-center justify-center">
                 <!-- Cart Icon -->
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
