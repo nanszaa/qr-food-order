@@ -25,39 +25,45 @@
 
     <div class="mx-auto">
 
-        <nav class="bg-brand-bg sticky top-0 z-50 w-full px-4 py-3 flex items-center justify-between shadow-md">
-            <!-- Left Side -->
-            <div class="flex items-center gap-2">
+        <div class="bg-brand-bg w-full">
 
-                <!-- Return back -->
-                <button onclick="history.back()">
-                    <span class="text-lg">←</span>
-                </button>
+            <nav class="sticky top-0 z-50 px-4 lg:px-6 py-3 shadow-md">
+                <div class="max-w-7xl flex mx-auto items-center justify-between">
 
-                <h1 class="text-lg font-bold text-brand-700">
-                    Warkop KUY
-                </h1>
-
-                
-            </div>
-
-            <!-- Right Side -->
-            <a href="{{ route('cart.index') }}"
-                class="relative w-10 h-10 rounded-full bg-brand-700 flex items-center justify-center">
-                <!-- Cart Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.293 1.293A1 1 0 007 16h12m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-
-                <!-- Badge -->
-                <span
-                    class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
-                    {{ $cartCount }}
-                </span>
-            </a>
-        </nav>
+                    <!-- Left Side -->
+                    <div class="flex items-center gap-2">
+        
+                        <!-- Return back -->
+                        <button onclick="history.back()">
+                            <span class="text-lg">←</span>
+                        </button>
+        
+                        <a href="/" class="text-lg font-bold text-brand-700">
+                            Warkop KUY
+                        </a>
+        
+                        
+                    </div>
+        
+                    <!-- Right Side -->
+                    <a href="{{ route('cart.index') }}"
+                        class="relative w-10 h-10 rounded-full bg-brand-700 flex items-center justify-center">
+                        <!-- Cart Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.293 1.293A1 1 0 007 16h12m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+        
+                        <!-- Badge -->
+                        <span
+                            class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
+                            {{ $cartCount }}
+                        </span>
+                    </a>
+                </div>
+            </nav>
+        </div>
 
         <main class="min-h-screen bg-neutral-100">
 
