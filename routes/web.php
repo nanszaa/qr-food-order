@@ -12,7 +12,7 @@ use App\Http\Controllers\Kasir\OrderController;
 use App\Http\Controllers\Dapur\KitchenController;
 use App\Http\Controllers\Kasir\TableController as KasirTableController;
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // ROUTE CART
 

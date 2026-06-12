@@ -214,7 +214,11 @@ class CartController extends Controller
 
     public function payment($orderId)
     {
-        $order = Order::findOrFail($orderId);
+        $order = Order::with([
+            'payment',
+            'orderItems.menu',
+            'customerSession.table',
+        ])->findOrFail($orderId);
 
         $payment = Payment::where('order_id', $orderId)->first();
 
