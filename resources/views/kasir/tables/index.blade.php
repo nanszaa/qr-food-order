@@ -11,6 +11,25 @@
 
     <h1>Daftar Meja</h1>
 
+    <h2>Ringkasan Meja</h2>
+
+    <p>
+        Total Meja :
+        {{ $tables->count() }}
+    </p>
+
+    <p>
+        Occupied :
+        {{ $occupiedCount }}
+    </p>
+
+    <p>
+        Available :
+        {{ $availableCount }}
+    </p>
+
+    <hr>
+
     @forelse($tables as $table)
 
         @php

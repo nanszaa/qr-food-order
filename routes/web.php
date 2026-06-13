@@ -11,6 +11,9 @@ use App\Http\Controllers\Dapur\DashboardController as DapurDashboardController;
 use App\Http\Controllers\Kasir\OrderController;
 use App\Http\Controllers\Dapur\KitchenController;
 use App\Http\Controllers\Kasir\TableController as KasirTableController;
+use App\Http\Controllers\Kasir\CategoryController;
+use App\Http\Controllers\Kasir\MenuController;
+use App\Http\Controllers\Kasir\ReportController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -55,14 +58,15 @@ Route::get('/payment/success/{order}', [CartController::class, 'paymentSuccess']
 
 Route::get(
     '/payment/simulate/{payment}',
-    [CartController::class, 'simulatePayment'])->name('payment.simulate'); 
+    [CartController::class, 'simulatePayment']
+)->name('payment.simulate');
 
 Route::post('/midtrans/callback', [MidtransController::class, 'callback']);
 Route::get('/midtrans/complete', [MidtransController::class, 'complete'])->name('midtrans.complete');
 
 // ROUTE UNTUL LOGIN
 
-Route::get('/scan/{token}',[TableController::class, 'scan'])->name('table.scan');
+Route::get('/scan/{token}', [TableController::class, 'scan'])->name('table.scan');
 
 Route::get('/login', [LoginController::class, 'showLogin'])
     ->name('login');
@@ -75,15 +79,144 @@ Route::post('/logout', [LoginController::class, 'logout'])
 
 // ROUTE UNTUK USER
 Route::get('/kasir', [DashboardController::class, 'index']);
-Route::get('/dapur',[DapurDashboardController::class, 'index']);
+Route::get('/dapur', [DapurDashboardController::class, 'index']);
 
-// ROUTE BACKEND KASIR
-Route::get('/kasir/orders',[OrderController::class, 'index'])->name('kasir.orders');
-Route::get('/kasir/orders/{order}',[OrderController::class, 'show'])->name('kasir.orders.show');
-Route::post('/kasir/orders/{order}/status',[OrderController::class, 'updateStatus'])->name('kasir.orders.update-status');
-Route::post('/kasir/payment/{payment}/confirm',[OrderController::class, 'confirmPayment'])->name('kasir.payment.confirm');
-Route::get('/kasir/tables',[KasirTableController::class, 'index'])->name('kasir.tables');
+// GROUP ROUTE BACKEND KASIR
+Route::middleware([
+    'auth',
+    'role:kasir'
+])->group(function () {
+
+    Route::get('/kasir', [
+        DashboardController::class,
+        'index'
+    ])->name('kasir.dashboard');
+
+    Route::get('/kasir/orders', [
+        OrderController::class,
+        'index'
+    ])->name('kasir.orders');
+
+    Route::get(
+    '/kasir/orders/history',
+    [OrderController::class, 'history']
+    )->name('kasir.orders.history');
+
+    Route::get('/kasir/orders/{order}', [
+        OrderController::class,
+        'show'
+    ])->name('kasir.orders.show');
+
+    Route::post('/kasir/orders/{order}/status', [
+        OrderController::class,
+        'updateStatus'
+    ])->name('kasir.orders.update-status');
+
+    Route::post('/kasir/payments/{payment}/confirm', [
+        OrderController::class,
+        'confirmPayment'
+    ])->name('kasir.payment.confirm');
+
+    Route::get('/kasir/tables', [
+        KasirTableController::class,
+        'index'
+    ])->name('kasir.tables');
+
+    Route::get(
+    '/kasir/orders/{order}/receipt',
+    [OrderController::class, 'receipt']
+    )->name('kasir.orders.receipt');
+
+    // BAGIAN CATEGORIE
+    Route::get(
+        '/kasir/categories',
+        [CategoryController::class, 'index']
+    )->name('kasir.categories');
+
+    Route::get(
+        '/kasir/categories/create',
+        [CategoryController::class, 'create']
+    )->name('kasir.categories.create');
+
+    Route::post(
+        '/kasir/categories',
+        [CategoryController::class, 'store']
+    )->name('kasir.categories.store');
+
+    Route::get(
+        '/kasir/categories/{category}/edit',
+        [CategoryController::class, 'edit']
+    )->name('kasir.categories.edit');
+
+    Route::put(
+        '/kasir/categories/{category}',
+        [CategoryController::class, 'update']
+    )->name('kasir.categories.update');
+
+    Route::delete(
+        '/kasir/categories/{category}',
+        [CategoryController::class, 'destroy']
+    )->name('kasir.categories.destroy');
+
+// BAGIAN MENU
+
+    Route::get(
+        '/kasir/menus',
+        [MenuController::class, 'index']
+    )->name('kasir.menus');
+
+    Route::get(
+        '/kasir/menus/create',
+        [MenuController::class, 'create']
+    )->name('kasir.menus.create');
+
+    Route::post(
+        '/kasir/menus',
+        [MenuController::class, 'store']
+    )->name('kasir.menus.store');
+
+        Route::get(
+        '/kasir/menus/{menu}/edit',
+        [MenuController::class, 'edit']
+    )->name('kasir.menus.edit');
+
+    Route::put(
+        '/kasir/menus/{menu}',
+        [MenuController::class, 'update']
+    )->name('kasir.menus.update');
+
+    Route::delete(
+    '/kasir/menus/{menu}',
+    [MenuController::class, 'destroy']
+    )->name('kasir.menus.destroy');
+
+
+    Route::get(
+    '/kasir/reports',
+    [ReportController::class, 'index']
+    )->name('kasir.reports');
+
+    
+
+});
+
+
+
 
 // ROUTE BACKEND DAPUR
-Route::get('/dapur/orders',[KitchenController::class, 'index'])->name('dapur.orders');
-Route::post('/dapur/orders/{orderItem}/status',[KitchenController::class, 'updateStatus'])->name('dapur.orders.update-status');
+Route::middleware([
+    'auth',
+    'role:dapur'
+])->group(function () {
+
+    Route::get('/dapur/orders', [
+        KitchenController::class,
+        'index'
+    ])->name('dapur.orders');
+
+    Route::post('/dapur/orders/{orderItem}/status', [
+        KitchenController::class,
+        'updateStatus'
+    ])->name('dapur.orders.update-status');
+
+});

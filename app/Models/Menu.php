@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Menu extends Model
 {
-     use HasFactory;
+    use HasFactory;
 
     protected $primaryKey = 'menu_id';
 
@@ -21,4 +21,13 @@ class Menu extends Model
         'is_available',
         'is_best_seller',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(
+            Category::class,
+            'category_id',
+            'category_id'
+        );
+    }
 }

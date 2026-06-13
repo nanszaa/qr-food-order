@@ -10,46 +10,51 @@ use App\Models\Payment;
 class OrderController extends Controller
 {
     public function index()
-    {
-        $status = request('status');
+{
+    $status = request('status');
 
-        $orders = Order::with([
-            'payment',
-            'customerSession.table'
-        ]);
+    $orders = Order::with([
+        'payment',
+        'customerSession.table'
+    ])
+    ->whereIn('order_status', [
+        'pending',
+        'processing'
+    ]);
 
-        if ($status) {
-            $orders->where(
-                'order_status',
-                $status
-            );
-        }
+    if ($status) {
 
-        $orders = $orders
-            ->latest()
-            ->get();
-
-        $pendingCount = Order::where(
+        $orders->where(
             'order_status',
-            'pending'
-        )->count();
+            $status
+        );
+    }
 
-        $processingCount = Order::where(
-            'order_status',
-            'processing'
-        )->count();
+    $orders = $orders
+        ->latest()
+        ->get();
 
-        $completedCount = Order::where(
-            'order_status',
-            'completed'
-        )->count();
+    $pendingCount = Order::where(
+        'order_status',
+        'pending'
+    )->count();
 
-        $cancelledCount = Order::where(
-            'order_status',
-            'cancelled'
-        )->count();
+    $processingCount = Order::where(
+        'order_status',
+        'processing'
+    )->count();
 
-        return view(
+    $completedCount = Order::where(
+        'order_status',
+        'completed'
+    )->count();
+
+    $cancelledCount = Order::where(
+        'order_status',
+        'cancelled'
+    )->count();
+
+    return view(
         'kasir.orders.index',
         compact(
             'orders',
@@ -59,8 +64,8 @@ class OrderController extends Controller
             'cancelledCount',
             'status'
         )
-        );
-    }
+    );
+}
 
     public function show($orderId)
     {
@@ -94,6 +99,25 @@ class OrderController extends Controller
         );
     }
 
+    public function history()
+    {
+        $orders = Order::with([
+            'payment',
+            'customerSession.table'
+        ])
+            ->whereIn('order_status', [
+                'completed',
+                'cancelled'
+            ])
+            ->latest()
+            ->get();
+
+        return view(
+            'kasir.orders.history',
+            compact('orders')
+        );
+    }
+
     public function confirmPayment(Payment $payment)
     {
         $payment->update([
@@ -106,4 +130,20 @@ class OrderController extends Controller
             'Pembayaran berhasil dikonfirmasi'
         );
     }
+
+    public function receipt($orderId)
+    {
+        $order = Order::with([
+            'payment',
+            'customerSession.table',
+            'orderItems.menu'
+        ])->findOrFail($orderId);
+
+        return view(
+            'kasir.orders.receipt',
+            compact('order')
+        );
+    }
+
+    
 }
