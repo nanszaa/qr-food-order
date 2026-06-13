@@ -30,6 +30,28 @@
 
     <hr>
 
+    <h2>Top 5 Menu Terlaris</h2>
+
+    @forelse($bestSellingMenus as $index => $menu)
+
+        <p>
+            {{ $index + 1 }}.
+            {{ $menu->menu->name }}
+            ({{ $menu->total_sold }}x terjual)
+        </p>
+
+    @empty
+
+        <p>
+            Belum ada data penjualan menu
+        </p>
+
+    @endforelse
+
+    <hr>
+
+    <hr>
+
     <form method="GET">
 
         <p>Tanggal Awal</p>

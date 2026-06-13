@@ -78,8 +78,6 @@ Route::post('/logout', [LoginController::class, 'logout'])
     ->name('logout');
 
 // ROUTE UNTUK USER
-Route::get('/kasir', [DashboardController::class, 'index']);
-Route::get('/dapur', [DapurDashboardController::class, 'index']);
 
 // GROUP ROUTE BACKEND KASIR
 Route::middleware([
@@ -208,6 +206,8 @@ Route::middleware([
     'auth',
     'role:dapur'
 ])->group(function () {
+
+Route::get('/dapur', [DapurDashboardController::class, 'index']);
 
     Route::get('/dapur/orders', [
         KitchenController::class,

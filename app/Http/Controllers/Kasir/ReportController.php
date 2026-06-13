@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Kasir;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use Illuminate\Http\Request;
-
+use App\Models\OrderItem;
+use App\Models\Menu;
+use Illuminate\Support\Facades\DB;
 class ReportController extends Controller
 {
     public function index(Request $request)
@@ -43,21 +45,49 @@ class ReportController extends Controller
             'status',
             'paid'
         )
-        ->whereDate(
-            'paid_at',
-            today()
-        )
-        ->sum('amount');
+            ->whereDate(
+                'paid_at',
+                today()
+            )
+            ->sum('amount');
 
         $todayTransactions = Payment::where(
             'status',
             'paid'
         )
-        ->whereDate(
-            'paid_at',
-            today()
+            ->whereDate(
+                'paid_at',
+                today()
+            )
+            ->count();
+
+        $bestSellingMenus = OrderItem::select(
+            'menu_id',
+            DB::raw('SUM(quantity) as total_sold')
         )
-        ->count();
+            ->with('menu')
+            ->groupBy('menu_id')
+            ->orderByDesc('total_sold')
+            ->take(5)
+            ->get();
+
+        // Reset semua best seller
+        Menu::query()->update([
+            'is_best_seller' => false
+        ]);
+
+        // Ambil Top 3
+        $topThreeMenus = $bestSellingMenus
+            ->take(3)
+            ->pluck('menu_id');
+
+        // Jadikan best seller
+        Menu::whereIn(
+            'menu_id',
+            $topThreeMenus
+        )->update([
+                    'is_best_seller' => true
+                ]);
 
         return view(
             'kasir.reports.index',
@@ -65,7 +95,8 @@ class ReportController extends Controller
                 'payments',
                 'totalRevenue',
                 'todayRevenue',
-                'todayTransactions'
+                'todayTransactions',
+                'bestSellingMenus'
             )
         );
     }

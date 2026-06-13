@@ -30,4 +30,13 @@ class Menu extends Model
             'category_id'
         );
     }
+
+    public function orderItems()
+    {
+        return $this->hasMany(
+            OrderItem::class,
+            'menu_id',
+            'menu_id'
+        );
+    }
 }

@@ -12,6 +12,7 @@
             src="https://placehold.co/600x400/b7e4c7/1b4332?text={{ urlencode($menu->name) }}"
             alt="{{ $menu->name }}"
             class="w-full h-64 object-cover"
+            
         >
 
         {{-- Back button --}}
