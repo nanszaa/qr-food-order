@@ -4,166 +4,186 @@
 
 @section('content')
 
-<div class="min-h-screen bg-brand-50 font-sans">
+    @php
+        $total = collect($cart)->sum(fn($item) => $item['price'] * $item['qty']);
+    @endphp
 
-    {{-- ===== HEADER ===== --}}
-    <div class="bg-brand-gradient px-5 pt-6 pb-5 shadow-header">
-        <h1 class="text-white text-2xl font-extrabold tracking-tight">Keranjang Saya</h1>
-        <p class="text-brand-300 text-xs mt-1">
-            {{ count($cart) }} item dalam keranjang
-        </p>
-    </div>
+    <div class="min-h-screen bg-brand-bg">
 
-    {{-- ===== SUCCESS ALERT ===== --}}
-    @if(session('success'))
-    <div
-        id="success-alert"
-        class="mx-4 mt-4 bg-brand-100 text-brand-700 px-4 py-3 rounded-2xl flex items-center justify-between shadow-card"
-    >
-        <div class="flex items-center gap-2">
-            <span class="text-lg">✅</span>
-            <span class="text-sm font-medium">{{ session('success') }}</span>
-        </div>
-        <button
-            onclick="document.getElementById('success-alert').remove()"
-            class="text-brand-600 hover:text-brand-800 font-bold text-lg leading-none ml-3"
-        >
-            ✕
-        </button>
-    </div>
-    @endif
+        <div class="max-w-7xl mx-auto px-4 lg:px-4 py-6">
 
-    {{-- ===== CART ITEMS ===== --}}
-    <div class="px-4 pt-4 pb-40">
+            {{-- ===== HEADER ===== --}}
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3">
 
-        @forelse($cart as $item)
+                <div class="flex items-center justify-between w-full">
+                    <h1 class="text-2xl font-bold">
+                        Keranjang Saya
+                    </h1>
 
-        <div class="bg-white rounded-2xl shadow-card border border-card-border p-4 mb-3">
-
-            {{-- Nama & catatan --}}
-            <div class="mb-3">
-                <h3 class="font-bold text-neutral-heading text-sm">
-                    {{ $item['name'] }}
-                </h3>
-
-                @if(!empty($item['notes']))
-                <p class="text-xs text-neutral-hint mt-1 flex items-center gap-1">
-                    <span>📝</span> {{ $item['notes'] }}
-                </p>
-                @endif
-
-                <p class="text-xs text-neutral-muted mt-1">
-                    Rp {{ number_format($item['price'], 0, ',', '.') }} / item
-                </p>
-            </div>
-
-            {{-- Divider --}}
-            <div class="border-t border-card-border mb-3"></div>
-
-            {{-- Qty control & subtotal --}}
-            <div class="flex justify-between items-center">
-
-                <div class="flex items-center gap-2">
-
-                    <form action="{{ route('cart.decrease', $item['menu_id']) }}" method="POST">
-                        @csrf
-                        <button
-                            type="submit"
-                            class="w-8 h-8 bg-danger text-white rounded-xl font-bold text-base flex items-center justify-center hover:bg-danger-dark active:scale-90 transition-all"
-                        >
-                            −
-                        </button>
-                    </form>
-
-                    <span class="font-bold text-neutral-heading text-sm w-6 text-center">
-                        {{ $item['qty'] }}
-                    </span>
-
-                    <form action="{{ route('cart.increase', $item['menu_id']) }}" method="POST">
-                        @csrf
-                        <button
-                            type="submit"
-                            class="w-8 h-8 bg-brand-600 text-white rounded-xl font-bold text-base flex items-center justify-center hover:bg-brand-700 active:scale-90 transition-all"
-                        >
-                            +
-                        </button>
-                    </form>
-
-                </div>
-
-                <div class="text-right">
-                    <p class="text-[10px] text-neutral-hint">Subtotal</p>
-                    <p class="font-extrabold text-brand-600 text-sm">
-                        Rp {{ number_format($item['price'] * $item['qty'], 0, ',', '.') }}
+                    <p class="text-xs bg-brand-100 p-2 rounded-lg font-semibold text-brand-600">
+                        #ORD-ADOCUWS
                     </p>
                 </div>
-
             </div>
 
-            {{-- Hapus --}}
-            <div class="mt-3 text-right">
-                <form action="{{ route('cart.remove', $item['menu_id']) }}" method="POST">
-                    @csrf
-                    <button
-                        type="submit"
-                        class="text-danger text-xs font-semibold hover:text-danger-dark transition-colors"
-                    >
-                        🗑 Hapus item
+            {{-- ===== SUCCESS ALERT ===== --}}
+            @if(session('success'))
+                <div id="success-alert"
+                    class="mx-4 mt-4 bg-brand-100 text-brand-700 px-4 py-3 rounded-2xl flex items-center justify-between shadow-card">
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg">✅</span>
+                        <span class="text-sm font-medium">{{ session('success') }}</span>
+                    </div>
+                    <button onclick="document.getElementById('success-alert').remove()"
+                        class="text-brand-600 hover:text-brand-800 font-bold text-lg leading-none ml-3">
+                        ✕
                     </button>
-                </form>
+                </div>
+            @endif
+
+            {{-- ===== CART ITEMS ===== --}}
+            <div class="flex flex-col lg:flex-row xl:flex-row gap-6">
+
+                <div class="flex-1">
+
+                    <div class="flex justify-end mb-6">
+                        <p class="text-xs bg-brand-100 p-2 rounded-lg font-semibold text-brand-600">
+                            {{ count($cart) }} item dalam keranjang
+                        </p>
+                    </div>
+
+                    @forelse($cart as $item)
+                        <div class="bg-neutral-50 border border-neutral-200 rounded-lg p-4 flex gap-3 mb-6">
+                            <div class="w-32 h-32 bg-gray-300 rounded flex-shrink-0">
+                                <img src="https://placehold.co/200" class="w-full h-full object-cover rounded-lg">
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+
+                                    {{-- ===== ITEM NAME ===== --}}
+                                    <div>
+                                        <h3 class="font-medium">
+                                            {{ $item['name'] }}
+                                        </h3>
+                                    </div>
+                                    {{-- ===== /ITEM NAME ===== --}}
+
+                                    {{-- ===== DELETE BUTTON ===== --}}
+                                    <form action="{{ route('cart.remove', $item['menu_id']) }}" method="POST">
+                                        @csrf
+                                        <button class="text-red-500">
+                                            ✕
+                                        </button>
+                                    </form>
+                                    {{-- ===== /DELETE BUTTON ===== --}}
+
+                                </div>
+
+                                {{-- ===== NOTE TEXTAREA ===== --}}
+                                <div class="mt-3">
+                                    <textarea name="notes[{{ $item['menu_id'] }}]" rows="1" placeholder="Tambahkan catatan.."
+                                        class="w-full bg-neutral-100 border border-neutral-200 rounded-lg p-2 resize-none outline-none focus:ring focus:ring-brand-200">{{ $item['notes'] ?? '' }}</textarea>
+                                </div>
+                                {{-- ===== /NOTE TEXTAREA ===== --}}
+
+                                <div class="mt-3 flex justify-between items-end">
+
+                                    {{-- ===== PRICE ===== --}}
+                                    <div class="text-green-700 font-bold">
+                                        Rp {{ number_format($item['price'], 0, ',', '.') }}
+                                    </div>
+                                    {{-- ===== /PRICE ===== --}}
+
+                                    {{-- ===== QTY CONTROL ===== --}}
+                                    <div class="inline-flex items-center border border-neutral-200 rounded">
+                                        <form action="{{ route('cart.decrease', $item['menu_id']) }}" method="POST">
+                                            @csrf
+                                            <button class="w-8 h-8">
+                                                -
+                                            </button>
+                                        </form>
+                                        <div class="w-px self-stretch bg-gray-200"></div>
+                                        <span class="w-8 text-center flex items-center justify-center">
+                                            {{ $item['qty'] }}
+                                        </span>
+                                        <div class="w-px self-stretch bg-gray-200"></div>
+                                        <form action="{{ route('cart.increase', $item['menu_id']) }}" method="POST">
+                                            @csrf
+                                            <button class="w-8 h-8">
+                                                +
+                                            </button>
+                                        </form>
+                                    </div>
+                                    {{-- ===== /QTY CONTROL ===== --}}
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    @empty
+
+                        <div class="text-center py-24">
+                            <p class="text-5xl mb-4">🛒</p>
+                            <p class="text-brand-700 font-semibold text-sm">Keranjang masih kosong</p>
+                            <p class="text-neutral-hint text-xs mt-1">Yuk tambahkan menu dulu!</p>
+                            <a href="/"
+                                class="inline-block mt-5 bg-brand-600 text-white text-sm font-semibold px-6 py-2.5 rounded-pill hover:bg-brand-700 transition-colors">
+                                Lihat Menu
+                            </a>
+                        </div>
+
+                    @endforelse
+
+                    <a href="{{ route('home') }}"
+                        class="block text-center bg-brand-700 text-white rounded-lg py-3 hover:bg-brand-800 transition">
+                        Tambah Menu
+                    </a>
+
+                </div>
+
+                {{-- ===== RINGKASAN PESANAN ===== --}}
+                <div class="lg:w-80 xl:w-80 flex-shrink-0">
+                    <div class="bg-neutral-50 rounded-lg border border-neutral-200 p-5">
+                        <h3 class="font-semibold mb-4">
+                            Ringkasan Pesanan
+                        </h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-neutral-500">Subtotal</span>
+                                <span class="font-semibold">
+                                    Rp {{ number_format($total, 0, ',', '.') }}
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-neutral-500">Service Charge</span>
+                                <span class="font-semibold">Rp 0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-neutral-500">Pajak</span>
+                                <span class="font-semibold">Rp 0</span>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="flex justify-between font-semibold">
+                            <span>Total</span>
+                            <span class="text-brand-700">
+                                Rp {{ number_format($total, 0, ',', '.') }}
+                            </span>
+                        </div>
+                        <a href="{{ route('checkout') }}"
+                            class="mt-5 block text-center bg-brand-700 text-white rounded-lg py-3 hover:bg-brand-800 transition">
+                            Pilih metode pembayaran →
+                        </a>
+                    </div>
+                </div>
+                {{-- ===== /RINGKASAN PESANAN ===== --}}
             </div>
-
-        </div>
-
-        @empty
-
-        <div class="text-center py-24">
-            <p class="text-5xl mb-4">🛒</p>
-            <p class="text-brand-700 font-semibold text-sm">Keranjang masih kosong</p>
-            <p class="text-neutral-hint text-xs mt-1">Yuk tambahkan menu dulu!</p>
-            <a
-                href="/"
-                class="inline-block mt-5 bg-brand-600 text-white text-sm font-semibold px-6 py-2.5 rounded-pill hover:bg-brand-700 transition-colors"
-            >
-                Lihat Menu
-            </a>
-        </div>
-
-        @endforelse
-
-    </div>
-
-</div>
-
-{{-- ===== STICKY FOOTER TOTAL ===== --}}
-@php
-    $total = collect($cart)->sum(fn($item) => $item['price'] * $item['qty']);
-@endphp
-
-@if(count($cart))
-<div class="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-card-border shadow-header px-4 pt-4 pb-6">
-
-    {{-- Ringkasan --}}
-    <div class="flex justify-between items-center mb-3">
-        <div>
-            <p class="text-xs text-neutral-hint">Total Pembayaran</p>
-            <p class="font-extrabold text-brand-700 text-lg">
-                Rp {{ number_format($total, 0, ',', '.') }}
-            </p>
-        </div>
-        <div class="text-right">
-            <p class="text-xs text-neutral-hint">{{ collect($cart)->sum('qty') }} item</p>
+            {{-- ===== /CART ITEMS ===== --}}
         </div>
     </div>
 
-    <a
-        href="{{ route('checkout') }}"
-        class="block text-center w-full bg-brand-gradient text-white py-3.5 rounded-2xl font-bold text-sm shadow-card-hover hover:opacity-90 active:scale-[0.98] transition-all"
-    >
-        Lanjut Checkout →
-    </a>
-
-</div>
-@endif
 
 @endsection

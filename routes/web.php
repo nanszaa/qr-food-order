@@ -15,7 +15,7 @@ use App\Http\Controllers\Kasir\CategoryController;
 use App\Http\Controllers\Kasir\MenuController;
 use App\Http\Controllers\Kasir\ReportController;
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // ROUTE CART
 
