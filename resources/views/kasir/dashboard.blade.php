@@ -1,118 +1,188 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.kasir.app')
 
-<head>
-    <title>Dashboard Kasir</title>
-</head>
+@section('title', 'Dashboard Kasir')
 
-<body>
+@section('page-title', 'Dashboard Kasir')
 
-    <h1>Dashboard Kasir</h1>
+@section('content')
 
-    <p>
-        Selamat datang,
-        {{ auth()->user()->name }}
-    </p>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
-    <hr>
+    <div class="bg-white p-5 rounded-xl shadow">
+        <p class="text-gray-500">Total Pesanan</p>
+        <h3 class="text-3xl font-bold">
+            {{ $totalOrders }}
+        </h3>
+    </div>
 
-    <h2>Statistik</h2>
+    <div class="bg-white p-5 rounded-xl shadow">
+        <p class="text-gray-500">Total Menu</p>
+        <h3 class="text-3xl font-bold">
+            {{ $totalMenus }}
+        </h3>
+    </div>
 
-    <p>
-        Total Pesanan :
-        {{ $totalOrders }}
-    </p>
+    <div class="bg-white p-5 rounded-xl shadow">
+        <p class="text-gray-500">Total Kategori</p>
+        <h3 class="text-3xl font-bold">
+            {{ $totalCategories }}
+        </h3>
+    </div>
 
-    <p>
-        Total Menu :
-        {{ $totalMenus }}
-    </p>
+    <div class="bg-white p-5 rounded-xl shadow">
+        <p class="text-gray-500">Total Meja</p>
+        <h3 class="text-3xl font-bold">
+            {{ $totalTables }}
+        </h3>
+    </div>
 
-    <p>
-        Total Kategori :
-        {{ $totalCategories }}
-    </p>
+</div>
 
-    <p>
-        Total Meja :
-        {{ $totalTables }}
-    </p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
 
-    <hr>
+    <div class="bg-green-500 text-white p-6 rounded-xl shadow">
+        <p>Pembayaran Berhasil</p>
+        <h3 class="text-3xl font-bold">
+            {{ $paidPayments }}
+        </h3>
+    </div>
 
-    <h2>Pembayaran</h2>
+    <div class="bg-yellow-500 text-white p-6 rounded-xl shadow">
+        <p>Pembayaran Pending</p>
+        <h3 class="text-3xl font-bold">
+            {{ $pendingPayments }}
+        </h3>
+    </div>
 
-    <p>
-        Sudah Dibayar :
-        {{ $paidPayments }}
-    </p>
+    <div class="bg-blue-600 text-white p-6 rounded-xl shadow">
+        <p>Pendapatan Hari Ini</p>
+        <h3 class="text-2xl font-bold">
+            Rp {{ number_format($todayRevenue,0,',','.') }}
+        </h3>
+    </div>
 
-    <p>
-        Pending :
-        {{ $pendingPayments }}
-    </p>
+</div>
 
-    <hr>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
 
-    <h2>Pendapatan</h2>
+    {{-- Grafik Pendapatan --}}
+    <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow">
 
-    <p>
-        Rp {{ number_format(
-    $todayRevenue,
-    0,
-    ',',
-    '.'
-) }}
-    </p>
+        <h3 class="text-lg font-bold mb-4">
+            Pendapatan 7 Hari Terakhir
+        </h3>
 
-    <hr>
+        <canvas id="revenueChart"></canvas>
 
-    <p>
-        <a href="{{ route('kasir.orders') }}">
-            Kelola Pesanan
-        </a>
-    </p>
+    </div>
 
-    <p>
-        <a href="{{ route('kasir.categories') }}">
-            Kelola Kategori
-        </a>
-    </p>
+    {{-- Status Order --}}
+    <div class="bg-white p-6 rounded-xl shadow">
 
-    <p>
-        <a href="{{ route('kasir.menus') }}">
-            Kelola Menu
-        </a>
-    </p>
+        <h3 class="text-lg font-bold mb-4">
+            Status Pesanan
+        </h3>
 
-    <p>
-        <a href="{{ route('kasir.tables') }}">
-            Kelola Meja
-        </a>
-    </p>
+        <canvas id="orderChart"></canvas>
 
-    <p>
-        <a href="{{ route('kasir.reports') }}">
-            Laporan Penjualan
-        </a>
-    </p>
+    </div>
 
-    <p>
-        <a href="{{ route('kasir.orders.history') }}">
-            Riwayat Pesanan
-        </a>
-    </p>
+</div>
 
-    <hr>
+<script>
 
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
+const revenueCtx =
+    document.getElementById('revenueChart');
 
-        <button type="submit">
-            Logout
-        </button>
-    </form>
+new Chart(revenueCtx, {
 
-</body>
+    type: 'line',
 
-</html>
+    data: {
+
+        labels: @json($revenueLabels),
+
+        datasets: [{
+
+            label: 'Pendapatan',
+
+            data: @json($revenueData),
+
+            borderColor: '#2563eb',
+
+            backgroundColor:
+                'rgba(37,99,235,0.1)',
+
+            fill: true,
+
+            tension: 0.4
+
+        }]
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+                display: false
+            }
+
+        }
+
+    }
+
+});
+
+const orderCtx =
+    document.getElementById('orderChart');
+
+new Chart(orderCtx, {
+
+    type: 'doughnut',
+
+    data: {
+
+        labels: [
+            'Pending',
+            'Processing',
+            'Completed',
+            'Cancelled'
+        ],
+
+        datasets: [{
+
+            data: [
+
+                {{ $pendingOrders }},
+                {{ $processingOrders }},
+                {{ $completedOrders }},
+                {{ $cancelledOrders }}
+
+            ],
+
+            backgroundColor: [
+
+                '#f59e0b',
+                '#3b82f6',
+                '#10b981',
+                '#ef4444'
+
+            ]
+
+        }]
+    },
+
+    options: {
+
+        responsive: true
+
+    }
+
+});
+
+</script>
+
+@endsection

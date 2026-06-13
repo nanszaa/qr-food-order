@@ -62,6 +62,7 @@ class MenuController extends Controller
             'stock' => $request->stock,
             'image' => $imagePath,
             'is_available' => $request->has('is_available'),
+            'is_best_seller' => $request->has('is_best_seller'),
         ]);
 
         return redirect()

@@ -1,40 +1,63 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit Kategori</title>
-</head>
-<body>
+@extends('layouts.kasir.app')
 
-<h1>Edit Kategori</h1>
+@section('title', 'Edit Kategori')
 
-<form
-    action="{{ route(
-        'kasir.categories.update',
-        $category->category_id
-    ) }}"
-    method="POST"
->
+@section('page-title', 'Edit Kategori')
 
-    @csrf
-    @method('PUT')
+@section('content')
 
-    <p>
-        Nama Kategori
-    </p>
+<div class="max-w-2xl">
 
-    <input
-        type="text"
-        name="name"
-        value="{{ $category->name }}"
-    >
+    <div class="bg-white rounded-xl shadow p-6">
 
-    <br><br>
+        <form
+            action="{{ route(
+                'kasir.categories.update',
+                $category->category_id
+            ) }}"
+            method="POST"
+        >
+            @csrf
+            @method('PUT')
 
-    <button type="submit">
-        Update
-    </button>
+            <div>
 
-</form>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Nama Kategori
+                </label>
 
-</body>
-</html>
+                <input
+                    type="text"
+                    name="name"
+                    value="{{ $category->name }}"
+                    required
+                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                >
+
+            </div>
+
+            <div class="mt-6 flex gap-3">
+
+                <button
+                    type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-lg"
+                >
+                    Update
+                </button>
+
+                <a
+                    href="{{ route('kasir.categories') }}"
+                    class="bg-gray-200 hover:bg-gray-300 px-5 py-3 rounded-lg"
+                >
+                    Kembali
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@endsection

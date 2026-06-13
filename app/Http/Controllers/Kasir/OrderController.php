@@ -10,62 +10,58 @@ use App\Models\Payment;
 class OrderController extends Controller
 {
     public function index()
-{
-    $status = request('status');
+    {
+        $status = request('status');
 
-    $orders = Order::with([
-        'payment',
-        'customerSession.table'
-    ])
-    ->whereIn('order_status', [
-        'pending',
-        'processing'
-    ]);
+        $orders = Order::with([
+            'payment',
+            'customerSession.table'
+        ]);
 
-    if ($status) {
+        if ($status) {
 
-        $orders->where(
+            $orders->where(
+                'order_status',
+                $status
+            );
+        }
+
+        $orders = $orders
+            ->latest()
+            ->get();
+
+        $pendingCount = Order::where(
             'order_status',
-            $status
+            'pending'
+        )->count();
+
+        $processingCount = Order::where(
+            'order_status',
+            'processing'
+        )->count();
+
+        $completedCount = Order::where(
+            'order_status',
+            'completed'
+        )->count();
+
+        $cancelledCount = Order::where(
+            'order_status',
+            'cancelled'
+        )->count();
+
+        return view(
+            'kasir.orders.index',
+            compact(
+                'orders',
+                'pendingCount',
+                'processingCount',
+                'completedCount',
+                'cancelledCount',
+                'status'
+            )
         );
     }
-
-    $orders = $orders
-        ->latest()
-        ->get();
-
-    $pendingCount = Order::where(
-        'order_status',
-        'pending'
-    )->count();
-
-    $processingCount = Order::where(
-        'order_status',
-        'processing'
-    )->count();
-
-    $completedCount = Order::where(
-        'order_status',
-        'completed'
-    )->count();
-
-    $cancelledCount = Order::where(
-        'order_status',
-        'cancelled'
-    )->count();
-
-    return view(
-        'kasir.orders.index',
-        compact(
-            'orders',
-            'pendingCount',
-            'processingCount',
-            'completedCount',
-            'cancelledCount',
-            'status'
-        )
-    );
-}
 
     public function show($orderId)
     {
@@ -145,5 +141,5 @@ class OrderController extends Controller
         );
     }
 
-    
+
 }

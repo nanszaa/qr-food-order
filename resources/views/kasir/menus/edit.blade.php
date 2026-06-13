@@ -1,103 +1,196 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit Menu</title>
-</head>
-<body>
+@extends('layouts.kasir.app')
 
-<h1>Edit Menu</h1>
+@section('title', 'Edit Menu')
 
-<form
-    action="{{ route(
-        'kasir.menus.update',
-        $menu->menu_id
-    ) }}"
-    method="POST"
-    enctype="multipart/form-data"
->
+@section('page-title', 'Edit Menu')
 
-    @csrf
-    @method('PUT')
+@section('content')
 
-    <p>Kategori</p>
+<div class="max-w-3xl">
 
-    <select name="category_id">
+```
+<div class="bg-white rounded-2xl shadow-sm p-6">
 
-        @foreach($categories as $category)
+    <form
+        action="{{ route('kasir.menus.update', $menu->menu_id) }}"
+        method="POST"
+        enctype="multipart/form-data"
+    >
 
-            <option
-                value="{{ $category->category_id }}"
-                {{ $menu->category_id == $category->category_id ? 'selected' : '' }}
+        @csrf
+        @method('PUT')
+
+        <div class="mb-4">
+
+            <label class="block font-medium mb-2">
+                Kategori
+            </label>
+
+            <select
+                name="category_id"
+                class="w-full border rounded-lg px-4 py-3"
             >
-                {{ $category->name }}
-            </option>
 
-        @endforeach
+                @foreach($categories as $category)
 
-    </select>
+                    <option
+                        value="{{ $category->category_id }}"
+                        {{ $menu->category_id == $category->category_id ? 'selected' : '' }}
+                    >
+                        {{ $category->name }}
+                    </option>
 
-    <p>Nama Menu</p>
+                @endforeach
 
-    <input
-        type="text"
-        name="name"
-        value="{{ $menu->name }}"
-    >
+            </select>
 
-    <p>Deskripsi</p>
+        </div>
 
-    <textarea name="description">{{ $menu->description }}</textarea>
+        <div class="mb-4">
 
-    <p>Harga</p>
+            <label class="block font-medium mb-2">
+                Nama Menu
+            </label>
 
-    <input
-        type="number"
-        name="price"
-        value="{{ $menu->price }}"
-    >
-
-    <p>Stock</p>
-
-    <input
-        type="number"
-        name="stock"
-        value="{{ $menu->stock }}"
-    >
-
-    <p>
-        <label>
             <input
-                type="checkbox"
-                name="is_available"
-                {{ $menu->is_available ? 'checked' : '' }}
+                type="text"
+                name="name"
+                value="{{ $menu->name }}"
+                class="w-full border rounded-lg px-4 py-3"
             >
-            Tersedia
-        </label>
-    </p>
 
-    @if($menu->image)
+        </div>
 
-    <p>Gambar Saat Ini</p>
+        <div class="mb-4">
 
-    <img
-        src="{{ asset('storage/'.$menu->image) }}"
-        width="150"
-    >
+            <label class="block font-medium mb-2">
+                Deskripsi
+            </label>
 
-    <p>Ganti Gambar</p>
+            <textarea
+                name="description"
+                rows="4"
+                class="w-full border rounded-lg px-4 py-3"
+            >{{ $menu->description }}</textarea>
 
-<input
-    type="file"
-    name="image"
->
+        </div>
 
-@endif
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
 
-    <button type="submit">
-        Update
-    </button>
+            <div>
 
-</form>
+                <label class="block font-medium mb-2">
+                    Harga
+                </label>
 
-</body>
-</html>
+                <input
+                    type="number"
+                    name="price"
+                    value="{{ $menu->price }}"
+                    class="w-full border rounded-lg px-4 py-3"
+                >
+
+            </div>
+
+            <div>
+
+                <label class="block font-medium mb-2">
+                    Stock
+                </label>
+
+                <input
+                    type="number"
+                    name="stock"
+                    value="{{ $menu->stock }}"
+                    class="w-full border rounded-lg px-4 py-3"
+                >
+
+            </div>
+
+        </div>
+
+        @if($menu->image)
+
+            <div class="mb-4">
+
+                <label class="block font-medium mb-2">
+                    Gambar Saat Ini
+                </label>
+
+                <img
+                    src="{{ asset('storage/'.$menu->image) }}"
+                    class="w-48 rounded-lg border"
+                >
+
+            </div>
+
+        @endif
+
+        <div class="mb-4">
+
+            <label class="block font-medium mb-2">
+                Ganti Gambar
+            </label>
+
+            <input
+                type="file"
+                name="image"
+                class="w-full border rounded-lg px-4 py-3"
+            >
+
+        </div>
+
+        <div class="space-y-2 mb-6">
+
+            <label class="flex items-center gap-2">
+
+                <input
+                    type="checkbox"
+                    name="is_available"
+                    {{ $menu->is_available ? 'checked' : '' }}
+                >
+
+                Tersedia
+
+            </label>
+
+            <label class="flex items-center gap-2">
+
+                <input
+                    type="checkbox"
+                    name="is_best_seller"
+                    {{ $menu->is_best_seller ? 'checked' : '' }}
+                >
+
+                Best Seller
+
+            </label>
+
+        </div>
+
+        <div class="flex gap-3">
+
+            <button
+                type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
+            >
+                Update
+            </button>
+
+            <a
+                href="{{ route('kasir.menus') }}"
+                class="bg-gray-200 px-6 py-3 rounded-lg"
+            >
+                Batal
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+```
+
+</div>
+
+@endsection

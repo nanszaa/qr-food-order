@@ -1,75 +1,130 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.kasir.app')
 
-<head>
-    <title>Daftar Kategori</title>
-</head>
+@section('title', 'Kategori')
 
-<body>
+@section('page-title', 'Daftar Kategori')
 
-    <h1>Daftar Kategori</h1>
+@section('content')
 
-    <p>
-        <a href="{{ route('kasir.categories.create') }}">
-            Tambah Kategori
-        </a>
-    </p>
+   <div class="flex justify-between items-center mb-6">
 
+    <h3 class="text-xl font-semibold">
+        Daftar Kategori
+    </h3>
 
-    @if(session('success'))
+    <a
+        href="{{ route('kasir.categories.create') }}"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+    >
+        + Tambah Kategori
+    </a>
 
-        <p>
-            {{ session('success') }}
-        </p>
+</div>
 
-    @endif
-    @forelse($categories as $category)
+@if(session('success'))
 
-        <hr>
+    <div class="bg-green-100 text-green-700 px-4 py-3 rounded-lg mb-6">
+        {{ session('success') }}
+    </div>
 
-        <p>
-            Nama :
-            {{ $category->name }}
-        </p>
+@endif
 
-        <p>
-            Slug :
-            {{ $category->slug }}
-        </p>
+<div class="bg-white rounded-xl shadow overflow-hidden">
 
-        <p>
-            <a href="{{ route(
-            'kasir.categories.edit',
-            $category->category_id
-        ) }}">
-                Edit
-            </a>
-        </p>
+    <table class="w-full">
 
-        <form action="{{ route(
-            'kasir.categories.destroy',
-            $category->category_id
-        ) }}" method="POST">
+        <thead class="bg-gray-100">
 
-            @csrf
-            @method('DELETE')
+            <tr>
 
-            <button type="submit" onclick="return confirm(
-                    'Yakin hapus kategori ini?'
-                )">
-                Hapus
-            </button>
+                <th class="text-left p-4">
+                    Nama
+                </th>
 
-        </form>
+                <th class="text-left p-4">
+                    Slug
+                </th>
 
-    @empty
+                <th class="text-center p-4">
+                    Aksi
+                </th>
 
-        <p>
-            Belum ada kategori
-        </p>
+            </tr>
 
-    @endforelse
+        </thead>
 
-</body>
+        <tbody>
 
-</html>
+        @forelse($categories as $category)
+
+            <tr class="border-t">
+
+                <td class="p-4">
+                    {{ $category->name }}
+                </td>
+
+                <td class="p-4 text-gray-500">
+                    {{ $category->slug }}
+                </td>
+
+                <td class="p-4">
+
+                    <div class="flex justify-center gap-2">
+
+                        <a
+                            href="{{ route(
+                                'kasir.categories.edit',
+                                $category->category_id
+                            ) }}"
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded"
+                        >
+                            Edit
+                        </a>
+
+                        <form
+                            action="{{ route(
+                                'kasir.categories.destroy',
+                                $category->category_id
+                            ) }}"
+                            method="POST"
+                        >
+
+                            @csrf
+                            @method('DELETE')
+
+                            <button
+                                type="submit"
+                                onclick="return confirm('Yakin hapus kategori ini?')"
+                                class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                            >
+                                Hapus
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        @empty
+
+            <tr>
+
+                <td colspan="3" class="text-center p-6 text-gray-500">
+                    Belum ada kategori
+                </td>
+
+            </tr>
+
+        @endforelse
+
+        </tbody>
+
+    </table>
+
+</div>
+
+@endsection
+

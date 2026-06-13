@@ -1,73 +1,171 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.kasir.app')
 
-<head>
-    <title>Tambah Menu</title>
-</head>
+@section('title', 'Tambah Menu')
 
-<body>
+@section('page-title', 'Tambah Menu')
 
-    <h1>Tambah Menu</h1>
+@section('content')
 
-    @if(session('success'))
+<div class="max-w-3xl">
 
-        <p>
-            {{ session('success') }}
-        </p>
+```
+<div class="bg-white rounded-2xl shadow-sm p-6">
 
-    @endif
-
-    <form action="{{ route('kasir.menus.store') }}" method="POST" enctype="multipart/form-data">
+    <form
+        action="{{ route('kasir.menus.store') }}"
+        method="POST"
+        enctype="multipart/form-data"
+    >
 
         @csrf
 
-        <p>Kategori</p>
+        <div class="mb-4">
 
-        <select name="category_id">
+            <label class="block font-medium mb-2">
+                Kategori
+            </label>
 
-            @foreach($categories as $category)
+            <select
+                name="category_id"
+                class="w-full border rounded-lg px-4 py-3"
+            >
 
-                <option value="{{ $category->category_id }}">
-                    {{ $category->name }}
-                </option>
+                @foreach($categories as $category)
 
-            @endforeach
+                    <option value="{{ $category->category_id }}">
+                        {{ $category->name }}
+                    </option>
 
-        </select>
+                @endforeach
 
-        <p>Nama Menu</p>
+            </select>
 
-        <input type="text" name="name">
+        </div>
 
-        <p>Deskripsi</p>
+        <div class="mb-4">
 
-        <textarea name="description"></textarea>
+            <label class="block font-medium mb-2">
+                Nama Menu
+            </label>
 
-        <p>Harga</p>
+            <input
+                type="text"
+                name="name"
+                class="w-full border rounded-lg px-4 py-3"
+            >
 
-        <input type="number" name="price">
+        </div>
 
-        <p>Stock</p>
+        <div class="mb-4">
 
-        <input type="number" name="stock">
+            <label class="block font-medium mb-2">
+                Deskripsi
+            </label>
 
-        <p>
-            <label>
-                <input type="checkbox" name="is_available" checked>
+            <textarea
+                name="description"
+                rows="4"
+                class="w-full border rounded-lg px-4 py-3"
+            ></textarea>
+
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+
+            <div>
+
+                <label class="block font-medium mb-2">
+                    Harga
+                </label>
+
+                <input
+                    type="number"
+                    name="price"
+                    class="w-full border rounded-lg px-4 py-3"
+                >
+
+            </div>
+
+            <div>
+
+                <label class="block font-medium mb-2">
+                    Stock
+                </label>
+
+                <input
+                    type="number"
+                    name="stock"
+                    class="w-full border rounded-lg px-4 py-3"
+                >
+
+            </div>
+
+        </div>
+
+        <div class="mb-4">
+
+            <label class="block font-medium mb-2">
+                Gambar Menu
+            </label>
+
+            <input
+                type="file"
+                name="image"
+                class="w-full border rounded-lg px-4 py-3"
+            >
+
+        </div>
+
+        <div class="space-y-2 mb-6">
+
+            <label class="flex items-center gap-2">
+
+                <input
+                    type="checkbox"
+                    name="is_available"
+                    checked
+                >
 
                 Tersedia
+
             </label>
-        </p>
 
-        <p>Gambar Menu</p>
+            <label class="flex items-center gap-2">
 
-        <input type="file" name="image">
-        <button type="submit">
-            Simpan
-        </button>
+                <input
+                    type="checkbox"
+                    name="is_best_seller"
+                >
+
+                Best Seller
+
+            </label>
+
+        </div>
+
+        <div class="flex gap-3">
+
+            <button
+                type="submit"
+                class="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-lg"
+            >
+                Simpan
+            </button>
+
+            <a
+                href="{{ route('kasir.menus') }}"
+                class="bg-gray-200 px-6 py-3 rounded-lg"
+            >
+                Batal
+            </a>
+
+        </div>
 
     </form>
 
-</body>
+</div>
+```
 
-</html>
+</div>
+
+@endsection

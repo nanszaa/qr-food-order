@@ -1,99 +1,126 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.kasir.app')
 
-<head>
-    <title>Daftar Meja</title>
-</head>
+@section('title', 'Table Management')
 
-<body>
+@section('page-title', 'Table Management')
 
+@section('content')
 
+    {{-- Summary Card --}}
 
-    <h1>Daftar Meja</h1>
+    <div class="flex gap-4 mb-8 flex-wrap">
 
-    <h2>Ringkasan Meja</h2>
+        <div class="bg-white rounded-xl px-5 py-3 shadow-sm border border-gray-100">
+            🟢 Available ({{ $availableCount }})
+        </div>
 
-    <p>
-        Total Meja :
-        {{ $tables->count() }}
-    </p>
+        <div class="bg-white rounded-xl px-5 py-3 shadow-sm border border-gray-100">
+            🔴 Occupied ({{ $occupiedCount }})
+        </div>
 
-    <p>
-        Occupied :
-        {{ $occupiedCount }}
-    </p>
+        <div class="bg-white rounded-xl px-5 py-3 shadow-sm border border-gray-100">
+            🟣 Pending ({{ $pendingCount }})
+        </div>
 
-    <p>
-        Available :
-        {{ $availableCount }}
-    </p>
+        <div class="bg-white rounded-xl px-5 py-3 shadow-sm border border-gray-100">
+            🔵 Kitchen ({{ $kitchenCount }})
+        </div>
 
-    <hr>
+    </div>
 
-    @forelse($tables as $table)
+    {{-- Grid Table --}}
 
-        @php
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-5">
 
-            $occupied = false;
+        @forelse($tables as $table)
 
-            foreach ($table->customerSessions as $session) {
+            @php
 
-                foreach ($session->orders as $order) {
+                $occupied = false;
 
-                    if (
-                        in_array(
-                            $order->order_status,
-                            ['pending', 'processing']
-                        )
-                    ) {
-                        $occupied = true;
+                foreach ($table->customerSessions as $session) {
+
+                    foreach ($session->orders as $order) {
+
+                        if (
+                            in_array(
+                                $order->order_status,
+                                ['pending', 'processing']
+                            )
+                        ) {
+                            $occupied = true;
+                        }
                     }
                 }
-            }
 
-        @endphp
+            @endphp
 
-        <hr>
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition">
 
-        <p>
-            Meja :
-            {{ $table->table_number }}
-        </p>
+                <div class="flex justify-between items-start">
 
-        <p>
-            Status :
+                    <h2 class="text-3xl font-bold text-gray-900">
+                        {{ $table->table_number }}
+                    </h2>
 
-            @if($occupied)
+                    <span class="text-2xl">
+                        🪑
+                    </span>
 
-                Occupied
+                </div>
 
-            @else
+                <div class="mt-5">
 
-                Available
+                    <p class="text-xs uppercase tracking-wider text-gray-400">
+                        QR Token
+                    </p>
 
-            @endif
-        </p>
+                    <p class="text-xs font-medium text-gray-600 break-all">
+                        {{ $table->qr_token }}
+                    </p>
 
-        <p>
-            QR Token :
-            {{ $table->qr_token }}
-        </p>
+                </div>
 
-        <p>
-            Aktif :
-            {{ $table->is_active ? 'Ya' : 'Tidak' }}
-        </p>
+                <div class="mt-5">
+
+                    @if($occupied)
+
+                        <span class="inline-flex px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm font-semibold">
+                            Occupied
+                        </span>
+
+                    @else
+
+                        <span class="inline-flex px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
+                            Available
+                        </span>
+
+                    @endif
+
+                </div>
+
+                <div class="mt-6">
+
+                   <a href="{{ route('kasir.tables.show', $table) }}"
+   class="block text-center bg-green-700 hover:bg-green-800 text-white py-2 rounded-lg">
+    Open
+</a>
+
+                </div>
+
+            </div>
+
+        @empty
+
+            <div class="col-span-full bg-white rounded-xl p-6 text-center text-gray-500">
+
+                Belum ada meja
+
+            </div>
+
+        @endforelse
 
 
+    </div>
 
-    @empty
-
-        <p>
-            Belum ada meja
-        </p>
-
-    @endforelse
-
-</body>
-
-</html>
+@endsection

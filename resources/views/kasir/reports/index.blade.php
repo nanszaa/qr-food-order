@@ -1,131 +1,254 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.kasir.app')
 
-<head>
-    <title>Laporan Penjualan</title>
-</head>
+@section('title', 'Laporan Penjualan')
 
-<body>
+@section('page-title', 'Laporan Penjualan')
 
-    <h1>Laporan Penjualan</h1>
+@section('content')
 
-    <hr>
+<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
 
-    <h2>Ringkasan Hari Ini</h2>
 
-    <p>
-        Total Transaksi :
+<div class="bg-white rounded-xl shadow-sm p-5">
+
+    <p class="text-gray-500 text-sm">
+        Pendapatan Hari Ini
+    </p>
+
+    <h2 class="text-2xl font-bold text-green-600 mt-2">
+        Rp {{ number_format($todayRevenue,0,',','.') }}
+    </h2>
+
+</div>
+
+<div class="bg-white rounded-xl shadow-sm p-5">
+
+    <p class="text-gray-500 text-sm">
+        Transaksi Hari Ini
+    </p>
+
+    <h2 class="text-2xl font-bold mt-2">
         {{ $todayTransactions }}
+    </h2>
+
+</div>
+
+<div class="bg-white rounded-xl shadow-sm p-5">
+
+    <p class="text-gray-500 text-sm">
+        Total Revenue Filter
     </p>
 
-    <p>
-        Pendapatan :
-        Rp {{ number_format(
-    $todayRevenue,
-    0,
-    ',',
-    '.'
-) }}
+    <h2 class="text-2xl font-bold text-blue-600 mt-2">
+        Rp {{ number_format($totalRevenue,0,',','.') }}
+    </h2>
+
+</div>
+
+<div class="bg-white rounded-xl shadow-sm p-5">
+
+    <p class="text-gray-500 text-sm">
+        Total Transaksi
     </p>
 
-    <hr>
-
-    <h2>Top 5 Menu Terlaris</h2>
-
-    @forelse($bestSellingMenus as $index => $menu)
-
-        <p>
-            {{ $index + 1 }}.
-            {{ $menu->menu->name }}
-            ({{ $menu->total_sold }}x terjual)
-        </p>
-
-    @empty
-
-        <p>
-            Belum ada data penjualan menu
-        </p>
-
-    @endforelse
-
-    <hr>
-
-    <hr>
-
-    <form method="GET">
-
-        <p>Tanggal Awal</p>
-
-        <input type="date" name="start_date" value="{{ request('start_date') }}">
-
-        <p>Tanggal Akhir</p>
-
-        <input type="date" name="end_date" value="{{ request('end_date') }}">
-
-        <br><br>
-
-        <button type="submit">
-            Filter
-        </button>
-
-    </form>
-
-    <hr>
-
-    <p>
-        Total Pendapatan :
-        Rp {{ number_format(
-    $totalRevenue,
-    0,
-    ',',
-    '.'
-) }}
-    </p>
-
-    <p>
-        Total Transaksi :
+    <h2 class="text-2xl font-bold mt-2">
         {{ $payments->count() }}
-    </p>
+    </h2>
 
-    <hr>
+</div>
 
-    @forelse($payments as $payment)
 
-        <p>
-            Order :
-            {{ $payment->order->order_code }}
-        </p>
+</div>
 
-        <p>
-            Metode :
-            {{ $payment->method }}
-        </p>
+<div class="bg-white rounded-xl shadow-sm p-6 mb-8">
 
-        <p>
-            Nominal :
-            Rp {{ number_format(
-            $payment->amount,
-            0,
-            ',',
-            '.'
-        ) }}
-        </p>
 
-        <p>
-            Dibayar :
-            {{ $payment->paid_at }}
-        </p>
+<h3 class="font-bold text-lg mb-4">
+    Filter Laporan
+</h3>
 
-        <hr>
+<form method="GET">
 
-    @empty
+    <div class="grid md:grid-cols-3 gap-4">
 
-        <p>
-            Belum ada transaksi
-        </p>
+        <div>
 
-    @endforelse
+            <label class="block text-sm mb-2">
+                Tanggal Awal
+            </label>
 
-</body>
+            <input
+                type="date"
+                name="start_date"
+                value="{{ request('start_date') }}"
+                class="w-full border rounded-lg px-4 py-3"
+            >
 
-</html>
+        </div>
+
+        <div>
+
+            <label class="block text-sm mb-2">
+                Tanggal Akhir
+            </label>
+
+            <input
+                type="date"
+                name="end_date"
+                value="{{ request('end_date') }}"
+                class="w-full border rounded-lg px-4 py-3"
+            >
+
+        </div>
+
+        <div class="flex items-end">
+
+            <button
+                type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
+            >
+                Filter
+            </button>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+</div>
+
+<div class="grid lg:grid-cols-3 gap-6 mb-8">
+
+
+<div class="lg:col-span-1">
+
+    <div class="bg-white rounded-xl shadow-sm p-6">
+
+        <h3 class="font-bold text-lg mb-4">
+            Top 5 Menu Terlaris
+        </h3>
+
+        @forelse($bestSellingMenus as $index => $menu)
+
+            <div class="flex justify-between py-3 border-b">
+
+                <div>
+
+                    <p class="font-semibold">
+                        #{{ $index + 1 }}
+                    </p>
+
+                    <p class="text-sm text-gray-600">
+                        {{ $menu->menu->name }}
+                    </p>
+
+                </div>
+
+                <div class="font-bold text-green-600">
+
+                    {{ $menu->total_sold }}x
+
+                </div>
+
+            </div>
+
+        @empty
+
+            <p class="text-gray-500">
+                Belum ada data penjualan
+            </p>
+
+        @endforelse
+
+    </div>
+
+</div>
+
+<div class="lg:col-span-2">
+
+    <div class="bg-white rounded-xl shadow-sm p-6">
+
+        <h3 class="font-bold text-lg mb-4">
+            Daftar Transaksi
+        </h3>
+
+        <div class="overflow-x-auto">
+
+            <table class="w-full">
+
+                <thead>
+
+                    <tr class="border-b">
+
+                        <th class="text-left py-3">
+                            Order
+                        </th>
+
+                        <th class="text-left py-3">
+                            Metode
+                        </th>
+
+                        <th class="text-left py-3">
+                            Nominal
+                        </th>
+
+                        <th class="text-left py-3">
+                            Tanggal
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @forelse($payments as $payment)
+
+                        <tr class="border-b">
+
+                            <td class="py-3">
+                                {{ $payment->order->order_code }}
+                            </td>
+
+                            <td class="py-3">
+                                {{ strtoupper($payment->method) }}
+                            </td>
+
+                            <td class="py-3 font-semibold text-green-600">
+                                Rp {{ number_format($payment->amount,0,',','.') }}
+                            </td>
+
+                            <td class="py-3">
+                                {{ \Carbon\Carbon::parse($payment->paid_at)->format('d-m-Y H:i') }}
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+
+                            <td colspan="4" class="py-6 text-center text-gray-500">
+                                Belum ada transaksi
+                            </td>
+
+                        </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+@endsection

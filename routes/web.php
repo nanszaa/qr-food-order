@@ -90,6 +90,11 @@ Route::middleware([
         'index'
     ])->name('kasir.dashboard');
 
+     Route::get(
+    '/kasir/tables/{table}',
+    [KasirTableController::class, 'show']
+)->name('kasir.tables.show');
+
     Route::get('/kasir/orders', [
         OrderController::class,
         'index'
@@ -194,6 +199,7 @@ Route::middleware([
     [ReportController::class, 'index']
     )->name('kasir.reports');
 
+   
     
 
 });
