@@ -15,7 +15,7 @@
     <div class="flex h-screen">
 
         <!-- Sidebar -->
-        <aside class="w-64 bg-white border-r border-gray-200 flex flex-col justify-between flex-shrink-0">
+        <aside class="w-64 bg-white flex flex-col justify-between flex-shrink-0">
 
             <!-- Top -->
             <div>
@@ -62,7 +62,7 @@
             </div>
 
             <!-- Bottom -->
-            <div class="border-t p-4">
+            <div class="border-t p-4 flex justify-between items-center">
 
                 <div class="flex items-center gap-3">
 
@@ -76,7 +76,7 @@
                     <div>
 
                         <p class="font-medium">
-                            Dapur
+                            {{ auth()->user()->name }}
                         </p>
 
                         <p class="text-xs text-gray-500">
@@ -84,8 +84,15 @@
                         </p>
 
                     </div>
-
                 </div>
+
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+
+                    <button type="submit" class="text-danger font-medium">
+                        Logout
+                    </button>
+                </form>
 
             </div>
 
