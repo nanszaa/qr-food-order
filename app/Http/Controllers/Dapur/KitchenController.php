@@ -37,7 +37,7 @@ class KitchenController extends Controller
             'customerSession.table',
             'orderItems.menu'
         ])
-            ->where('order_status', 'paid')
+            ->where('order_status', 'processing')
             ->whereHas('orderItems', function ($q) {
                 $q->where('kitchen_status', 'pending');
             })->get();

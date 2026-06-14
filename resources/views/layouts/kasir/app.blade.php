@@ -44,7 +44,7 @@
    {{ request()->routeIs('kasir.dashboard')
     ? 'bg-green-600 text-white'
     : 'hover:bg-slate-800'
-   }}">🪑 Dashboard</a>
+   }}">📊 Dashboard</a>
 
                 <a href="{{ route('kasir.tables') }}" class="block px-4 py-2 rounded
    {{ request()->routeIs('kasir.tables*')

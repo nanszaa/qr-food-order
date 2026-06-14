@@ -52,7 +52,9 @@ class CartController extends Controller
     {
         $cart = session()->get('cart', []);
 
-        return view('customer.cart', compact('cart'));
+        $menu = Menu::all();
+
+        return view('customer.cart', compact('cart', 'menu'));
     }
 
     public function increase($menuId)

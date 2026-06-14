@@ -208,31 +208,20 @@ Route::middleware([
 
 
 // ROUTE BACKEND DAPUR
-Route::middleware([
-    'auth',
-    'role:dapur'
-])->group(function () {
+Route::middleware(['auth', 'role:dapur'])->group(function () {
 
-Route::get('/dapur', [DapurDashboardController::class, 'index']);
+    Route::get('/dapur', [DapurDashboardController::class, 'index'])
+        ->name('dapur.dashboard');
 
-    Route::get('/dapur/orders', [
-        KitchenController::class,
-        'index'
-    ])->name('dapur.orders');
+    Route::get('/dapur/orders', [KitchenController::class, 'index'])
+        ->name('dapur.orders.index');
 
-    Route::post('/dapur/orders/{orderItem}/status', [
-        KitchenController::class,
-        'updateStatus'
-    ])->name('dapur.orders.update-status');
+    Route::post('/dapur/orders/{orderItem}/status', [KitchenController::class, 'updateStatus'])
+        ->name('dapur.orders.update-status');
 
-    Route::post(
-        '/dapur/orders/{order}/start',
-        [KitchenController::class, 'startCooking']
-    )->name('dapur.orders.start');
+    Route::post('/dapur/orders/{order}/start', [KitchenController::class, 'startCooking'])
+        ->name('dapur.orders.start');
 
-    Route::post(
-        '/dapur/orders/{order}/served',
-        [KitchenController::class, 'servedOrder']
-    )->name('dapur.orders.served');
-
+    Route::post('/dapur/orders/{order}/served', [KitchenController::class, 'servedOrder'])
+        ->name('dapur.orders.served');
 });

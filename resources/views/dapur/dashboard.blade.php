@@ -1,24 +1,30 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard Dapur</title>
-</head>
-<body>
+@extends('layouts.dapur.app')
 
-    <h1>Dashboard Dapur</h1>
+@section('content')
+<div class="container-fluid">
 
-    <p>
-        Selamat datang,
-        {{ auth()->user()->name }}
-    </p>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>Total Pesanan</h5>
+                <h2>0</h2>
+            </div>
+        </div>
 
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>Pesanan Diproses</h5>
+                <h2>0</h2>
+            </div>
+        </div>
 
-        <button type="submit">
-            Logout
-        </button>
-    </form>
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>Pesanan Selesai</h5>
+                <h2>0</h2>
+            </div>
+        </div>
+    </div>
 
-</body>
-</html>
+</div>
+@endsection

@@ -92,7 +92,7 @@
 
                         {{-- Gambar --}}
                         <div class="relative overflow-hidden aspect-[4/3]">
-                            <img src="https://placehold.co/400x300/b7e4c7/1b4332?text={{ urlencode($menu->name) }}"
+                            <img src="{{ asset('storage/' . $menu->image) }}"
                                 alt="{{ $menu->name }}"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
 

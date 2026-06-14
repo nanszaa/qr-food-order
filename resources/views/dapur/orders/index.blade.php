@@ -1,4 +1,4 @@
-@extends('layouts.operasional.dapur')
+@extends('layouts.dapur.app')
 
 @section('title', 'Daftar Order')
 

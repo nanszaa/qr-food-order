@@ -6,16 +6,6 @@
 
 <div class="min-h-screen bg-brand-bg py-6">
 
-
-    {{-- ===== HERO IMAGE ===== --}}
-    <div class="relative">
-        <img
-            src="https://placehold.co/600x400/b7e4c7/1b4332?text={{ urlencode($menu->name) }}"
-            alt="{{ $menu->name }}"
-            class="w-full h-64 object-cover"
-            
-        >
-
     <div class="max-w-7xl mx-auto px-4 lg:px-8">
         <form action="{{ route('cart.add', $menu->menu_id) }}" method="POST">
             @csrf
@@ -28,7 +18,7 @@
                     <div class="bg-gray-200 overflow-hidden aspect-square rounded-lg">
 
                         <img
-                            src="https://placehold.co/600x600/b7e4c7/1b4332?text={{ urlencode($menu->name) }}"
+                            src="{{ asset('storage/' . $menu->image) }}"
                             alt="{{ $menu->name }}"
                             class="w-full h-full object-cover">
 
