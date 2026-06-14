@@ -225,4 +225,14 @@ Route::get('/dapur', [DapurDashboardController::class, 'index']);
         'updateStatus'
     ])->name('dapur.orders.update-status');
 
+    Route::post(
+        '/dapur/orders/{order}/start',
+        [KitchenController::class, 'startCooking']
+    )->name('dapur.orders.start');
+
+    Route::post(
+        '/dapur/orders/{order}/served',
+        [KitchenController::class, 'servedOrder']
+    )->name('dapur.orders.served');
+
 });

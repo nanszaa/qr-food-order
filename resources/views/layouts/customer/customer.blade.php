@@ -34,9 +34,9 @@
                     <div class="flex items-center gap-2">
         
                         <!-- Return back -->
-                        <button onclick="history.back()">
+                        <a href="#">
                             <span class="text-lg">←</span>
-                        </button>
+                        </a>
         
                         <a href="/" class="text-lg font-bold text-brand-700">
                             Warkop KUY
