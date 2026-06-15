@@ -55,7 +55,7 @@
                     @forelse($cart as $item)
                         <div class="bg-neutral-50 border border-neutral-200 rounded-lg p-4 flex gap-3 mb-6">
                             <div class="w-32 h-32 bg-gray-300 rounded flex-shrink-0">
-                                <img src="{{ asset('storage/' . $menu->image) }}" class="w-full h-full object-cover rounded-lg">
+                                <img src="https://placehold.co/600x400?text=Placeholder" class="w-full h-full object-cover rounded-lg">
                             </div>
                             <div class="flex-1">
                                 <div class="flex justify-between">

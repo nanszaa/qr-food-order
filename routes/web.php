@@ -61,6 +61,11 @@ Route::get(
     [CartController::class, 'simulatePayment']
 )->name('payment.simulate');
 
+Route::get(
+    '/payment/status/{order}',
+    [CartController::class, 'paymentStatus']
+)->name('payment.status');
+
 Route::post('/midtrans/callback', [MidtransController::class, 'callback']);
 Route::get('/midtrans/complete', [MidtransController::class, 'complete'])->name('midtrans.complete');
 

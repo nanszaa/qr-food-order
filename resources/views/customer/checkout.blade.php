@@ -105,9 +105,24 @@
 
                             <div class="space-y-2 text-sm">
 
-                                <label class="flex items-center gap-2 mb-3 text-sm">
+                                <label class="flex items-center gap-2">
                                     <input type="radio" name="payment_method" value="qris" checked>
                                     <span>QRIS</span>
+                                </label>
+
+                                <label class="flex items-center gap-2">
+                                    <input type="radio" name="payment_method" value="bni">
+                                    <span>Virtual Account BNI</span>
+                                </label>
+
+                                <label class="flex items-center gap-2">
+                                    <input type="radio" name="payment_method" value="bri">
+                                    <span>Virtual Account BRI</span>
+                                </label>
+
+                                <label class="flex items-center gap-2">
+                                    <input type="radio" name="payment_method" value="permata">
+                                    <span>Virtual Account Permata</span>
                                 </label>
 
                                 <label class="flex items-center gap-2">
@@ -166,14 +181,6 @@
                 </div>
             </div>
 
-            {{-- ===== STICKY FOOTER ===== --}}
-            <div
-                class="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-card-border px-4 pt-4 pb-6 shadow-header">
-                <button type="submit"
-                    class="w-full bg-brand-gradient text-white py-4 rounded-2xl font-bold text-sm shadow-card-hover hover:opacity-90 active:scale-[0.98] transition-all">
-                    🛍 Buat Pesanan
-                </button>
-            </div>
         </form>
 
     </div>

@@ -40,8 +40,31 @@
                     <span class="font-semibold">{{ $order->customerSession->customer_name ?? 'Guest' }}</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-neutral-500">Metode</span> 
-                    <span class="font-semibold">{{ strtoupper($order->payment->method) }}</span>
+                    <span class="text-neutral-500">
+                        Metode
+                    </span> 
+
+                    <span class="font-semibold">
+                        @switch($order->payment->method)
+                            @case('qris')
+                                QRIS
+                            @break
+                            @case('bca')
+                                BCA Virtual Account
+                            @break
+                            @case('bni')
+                                BNI Virtual Account
+                            @break
+                            @case('bri')
+                                BRI Virtual Account
+                            @break
+                            @case('permata')
+                                Permata Virtual Account
+                            @break
+                            @default
+                                {{ strtoupper($order->payment->method) }}
+                        @endswitch
+                    </span>
                 </div>
             </div>
 

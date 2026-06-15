@@ -124,7 +124,7 @@ class CartController extends Controller
 
         request()->validate([
             'customer_name' => 'required|min:2|max:100',
-            'payment_method' => 'required|in:qris,cash',
+            'payment_method' => 'required|in:qris,bca,bni,bri,permata,gopay,shopeepay,cash',
         ]);
 
         $cart = session()->get('cart', []);
@@ -143,7 +143,7 @@ class CartController extends Controller
         |--------------------------------------------------------------------------
         */
 
-       $customerSession = CustomerSession::create([
+        $customerSession = CustomerSession::create([
             'table_id' => session('table_id'),
             'session_token' => Str::uuid(),
             'customer_name' => request('customer_name'),
@@ -195,12 +195,19 @@ class CartController extends Controller
             'status' => 'pending',
         ]);
 
-        if (request('payment_method') === 'qris') {
+        if (request('payment_method') != 'cash') {
 
-            $snapToken = MidtransService::createSnapToken($order);
+            $response = MidtransService::createCharge(
+                $order,
+                request('payment_method')
+            );
 
             $payment->update([
-                'payment_token' => $snapToken
+
+                'transaction_id' => $response->transaction_id,
+                'payment_data' => json_encode($response),
+                'expires_at' => $response->expiry_time ?? now()->addMinutes(15),
+
             ]);
 
             return redirect()
@@ -224,9 +231,22 @@ class CartController extends Controller
 
         $payment = Payment::where('order_id', $orderId)->first();
 
+        $paymentData = [];
+
+        if ($payment && $payment->payment_data) {
+            $paymentData = json_decode(
+                $payment->payment_data,
+                true
+            );
+        }
+
         return view(
             'customer.payment',
-            compact('order', 'payment')
+            compact(
+                'order',
+                'payment',
+                'paymentData'
+            )
         );
     }
 
@@ -302,5 +322,36 @@ class CartController extends Controller
             'payment.success',
             $payment->order->order_id
         );
-}
+    }
+
+    public function paymentStatus(Order $order)
+    {
+        /** @var object $response */
+        $response = MidtransService::checkStatus(
+            $order->order_code
+        );
+
+        if (
+            in_array($response->transaction_status, [
+                'settlement',
+                'capture'
+            ])
+        ) {
+
+            $payment = $order->payment;
+
+            $payment->update([
+                'status' => 'paid',
+                'paid_at' => now(),
+            ]);
+
+            $order->update([
+                'order_status' => 'processing',
+            ]);
+        }
+
+        return response()->json([
+            'status' => $order->payment->fresh()->status
+        ]);
+    }
 }
