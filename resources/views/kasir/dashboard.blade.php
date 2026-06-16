@@ -55,7 +55,7 @@
     </div>
 
     <div class="bg-blue-600 text-white p-6 rounded-xl shadow">
-        <p>Pendapatan Hari Ini</p>
+        <p>Pendapatan </p>
         <h3 class="text-2xl font-bold">
             Rp {{ number_format($todayRevenue,0,',','.') }}
         </h3>

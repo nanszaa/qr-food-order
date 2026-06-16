@@ -24,7 +24,7 @@
                 <div class="px-6 py-5 border-b flex items-center gap-3">
 
                     <img
-                        src="{{ asset('images/logo.png') }}"
+                        src="{{ asset('images/logo.jpg') }}"
                         class="w-12 h-12 rounded-full">
 
                     <div>
@@ -41,6 +41,21 @@
 
                 <!-- Menu -->
                 <nav class="p-4">
+
+                 <a
+                        href="{{ route('dapur.dashboard') }}"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl
+                        {{ request()->routeIs('dapur.dashboard')
+                            ? 'bg-brand-600 text-white'
+                            : 'text-gray-700 hover:bg-gray-100 transition' }}">
+
+                        <span>📈</span>
+
+                        <span class="font-medium">
+                            Dashboard
+                        </span>
+
+                    </a>
 
                     <a
                         href="{{ route('dapur.orders.index') }}"

@@ -33,17 +33,22 @@
                     <div class="flex-1 space-y-3">
 
                         {{-- ===== NAMA PELANGGAN INPUT ===== --}}
-                        <div class="flex justify-end lg:w-64 w-full">
+                        <div class="bg-white rounded-2xl border border-neutral-200 p-4 shadow-sm">
+
+                            <label class="block text-sm font-medium mb-2">
+                                Nama Pemesan
+                            </label>
 
                             <input type="text" name="customer_name" placeholder="Masukkan nama"
                                 value="{{ old('customer_name') }}"
-                                class="w-full rounded-lg border px-3 py-2 text-sm outline-none bg-neutral-50 border-neutral-200">
+                                class="w-full rounded-xl border border-neutral-200 px-4 py-3 text-sm">
 
-                            @error('customer_name')
+                                 @error('customer_name')
                                 <p class="text-danger text-xs mt-2 flex items-center gap-1">
                                     ⚠️ {{ $message }}
                                 </p>
                             @enderror
+
                         </div>
                         {{-- ===== /NAMA PELANGGAN INPUT ===== --}}
 
@@ -53,10 +58,20 @@
                                 $total += $subtotal;
                             @endphp
 
-                            <div class="bg-neutral-50 border border-neutral-200 rounded-lg p-3 flex gap-3">
+                            <div class="bg-white rounded-2xl border border-neutral-200 p-4 shadow-sm flex gap-4">
 
                                 <div class="w-24 h-24 bg-gray-300 rounded flex-shrink-0">
-                                    <img src="https://placehold.co/200" class="w-full h-full object-cover rounded">
+                                    <div class="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+
+                                        @if(!empty($item['image']))
+                                            <img src="{{ asset('storage/' . $item['image']) }}" alt="{{ $item['name'] }}"
+                                                class="w-full h-full object-cover">
+                                        @else
+                                            <img src="https://placehold.co/300x300/e5e7eb/6b7280?text=Menu" alt="Menu"
+                                                class="w-full h-full object-cover">
+                                        @endif
+
+                                    </div>
                                 </div>
 
                                 <div class="flex-1 h-24 flex flex-col justify-between">

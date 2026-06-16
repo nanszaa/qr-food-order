@@ -38,6 +38,7 @@ class CartController extends Controller
                 'price' => $menu->price,
                 'qty' => $qty,
                 'notes' => $notes,
+                'image' => $menu->image,
             ];
         }
 
