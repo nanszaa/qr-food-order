@@ -231,6 +231,11 @@ Route::delete(
     '/kasir/tables/{table}',
     [KasirTableController::class, 'destroy']
 )->name('kasir.tables.destroy');
+
+Route::post(
+    '/kasir/sessions/{session}/close',
+    [KasirTableController::class, 'closeSession']
+)->name('kasir.sessions.close');
    
  Route::get(
     '/kasir/tables/{table}',

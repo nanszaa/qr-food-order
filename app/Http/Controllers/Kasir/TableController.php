@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Kasir;
 
 use App\Models\Table;
+use App\Models\CustomerSession;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -15,42 +16,21 @@ class TableController extends Controller
         ])->get();
 
         $occupiedCount = 0;
-
-        foreach ($tables as $table) {
-
-            $occupied = false;
-
-            foreach ($table->customerSessions as $session) {
-
-                foreach ($session->orders as $order) {
-
-                    if (
-                        in_array(
-                            $order->order_status,
-                            ['pending', 'processing']
-                        )
-                    ) {
-                        $occupied = true;
-                    }
-                }
-            }
-
-            if ($occupied) {
-                $occupiedCount++;
-            }
-        }
-
-        $availableCount =
-            $tables->count() - $occupiedCount;
-
         $pendingCount = 0;
         $kitchenCount = 0;
 
         foreach ($tables as $table) {
 
-            foreach ($table->customerSessions as $session) {
+            // Cek apakah ada session aktif
+            $activeSession = $table->customerSessions
+                ->where('status', 'active')
+                ->first();
 
-                foreach ($session->orders as $order) {
+            if ($activeSession) {
+
+                $occupiedCount++;
+
+                foreach ($activeSession->orders as $order) {
 
                     if ($order->order_status === 'pending') {
                         $pendingCount++;
@@ -63,6 +43,8 @@ class TableController extends Controller
             }
         }
 
+        $availableCount = $tables->count() - $occupiedCount;
+
         return view(
             'kasir.tables.index',
             compact(
@@ -74,10 +56,10 @@ class TableController extends Controller
             )
         );
     }
-
     public function show(Table $table)
     {
         $table->load([
+            'customerSessions.orders.orderItems',
             'customerSessions.orders.payment'
         ]);
 
@@ -87,59 +69,75 @@ class TableController extends Controller
         );
     }
 
+    public function closeSession($sessionId)
+    {
+        $session = CustomerSession::findOrFail(
+            $sessionId
+        );
+
+        $session->update([
+            'status' => 'closed'
+        ]);
+
+        return back()->with(
+            'success',
+            'Session berhasil ditutup'
+        );
+    }
+
     public function create()
-{
-    return view('kasir.tables.create');
-}
+    {
+        return view('kasir.tables.create');
+    }
 
-public function store(Request $request)
-{
-    $request->validate([
-        'table_number' => 'required|unique:tables'
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'table_number' => 'required|unique:tables'
+        ]);
 
-    Table::create([
-        'table_number' => $request->table_number,
-        'qr_token' => Str::uuid(),
-        'is_active' => true,
-    ]);
+        Table::create([
+            'table_number' => $request->table_number,
+            'qr_token' => Str::uuid(),
+            'is_active' => true,
+        ]);
 
-    return redirect()
-        ->route('kasir.tables')
-        ->with('success', 'Meja berhasil ditambahkan');
-}
+        return redirect()
+            ->route('kasir.tables')
+            ->with('success', 'Meja berhasil ditambahkan');
+    }
 
-public function edit(Table $table)
-{
-    return view(
-        'kasir.tables.edit',
-        compact('table')
-    );
-}
+    public function edit(Table $table)
+    {
+        return view(
+            'kasir.tables.edit',
+            compact('table')
+        );
+    }
 
-public function update(Request $request,Table $table)
-{
-    $request->validate([
-        'table_number' => 'required'
-    ]);
+    public function update(Request $request, Table $table)
+    {
+        $request->validate([
+            'table_number' => 'required'
+        ]);
 
-    $table->update([
-        'table_number' => $request->table_number,
-        'is_active' => $request->has('is_active')
-    ]);
+        $table->update([
+            'table_number' => $request->table_number,
+            'is_active' => $request->has('is_active')
+        ]);
 
-    return redirect()
-        ->route('kasir.tables')
-        ->with('success', 'Meja berhasil diupdate');
-}
+        return redirect()
+            ->route('kasir.tables')
+            ->with('success', 'Meja berhasil diupdate');
+    }
 
-public function destroy(Table $table)
-{
-    $table->delete();
+    public function destroy(Table $table)
+    {
+        $table->delete();
 
-    return back()->with(
-        'success',
-        'Meja berhasil dihapus'
-    );
-}
+        return back()->with(
+            'success',
+            'Meja berhasil dihapus'
+        );
+    }
 }

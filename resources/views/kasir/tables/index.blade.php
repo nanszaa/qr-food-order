@@ -6,7 +6,7 @@
 
 @section('content')
 
-   
+
 
     {{-- Summary Card --}}
 
@@ -30,7 +30,7 @@
 
     </div>
 
-     <div class="flex justify-end mb-6">
+    <div class="flex justify-end mb-6">
 
         <a href="{{ route('kasir.tables.create') }}"
             class="bg-green-700 hover:bg-green-800 text-white px-5 py-3 rounded-lg">
@@ -49,22 +49,9 @@
 
             @php
 
-                $occupied = false;
-
-                foreach ($table->customerSessions as $session) {
-
-                    foreach ($session->orders as $order) {
-
-                        if (
-                            in_array(
-                                $order->order_status,
-                                ['pending', 'processing']
-                            )
-                        ) {
-                            $occupied = true;
-                        }
-                    }
-                }
+                $occupied = $table->customerSessions
+                    ->where('status', 'active')
+                    ->isNotEmpty();
 
             @endphp
 
