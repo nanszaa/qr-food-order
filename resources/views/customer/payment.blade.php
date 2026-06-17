@@ -33,55 +33,116 @@
 
                         <div class="flex flex-col items-center">
                             <p class="text-sm text-neutral-500">Payment Method</p>
-                            <span class="font-semibold">QRIS</span>
+                            <span class="font-semibold">
+                                {{ strtoupper($payment->method) }}
+                            </span>
                         </div>
 
                         {{-- QR Placeholder --}}
-                        <div id="pay-button"
-                            class="w-48 h-48 bg-indigo-900 cursor-pointer hover:opacity-90 transition flex items-center justify-center text-white text-center p-4">
-                            Klik untuk bayar via Midtrans
-                        </div>
+                        @if(isset($paymentData['qr_string']))
+
+                            <div class="bg-white p-3 rounded-lg">
+                                {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(220)->generate($paymentData['qr_string']) !!}
+                            </div>
+                            <!-- <pre>
+                                {{ print_r($paymentData['actions'], true) }}
+                            </pre> -->
+
+                        @elseif($payment->method == 'permata')
+
+                            {{ $paymentData['permata_va_number'] }}
+                            <button onclick="copyVA()"
+                                class="bg-brand-700 text-white px-4 py-2 rounded-lg">
+                                Copy VA
+                            </button>
+
+                        @else
+
+                            {{ $paymentData['va_numbers'][0]['va_number'] }}
+                            <button onclick="copyVA()"
+                                class="bg-brand-700 text-white px-4 py-2 rounded-lg">
+                                Copy VA
+                            </button>
+
+                        @endif
                     </div>
                 </div>
 
                 {{-- KOLOM KANAN: QRIS & Instruksi --}}
                 <div class="flex-1">
 
-
                     {{-- Cara Pembayaran --}}
                     <div class="bg-gray-50 p-6 rounded-xl text-sm border border-neutral-200">
                         <h3 class="font-semibold mb-5">Cara pembayaran</h3>
                         <div class="space-y-3">
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
-                                    1</div>
-                                <p class="text-neutral-500">Buka aplikasi mobile banking atau e-wallet.</p>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
-                                    2</div>
-                                <p class="text-neutral-500">Pilih fitur scan QRIS dan arahkan kamera ke kode di layar.</p>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
-                                    3</div>
-                                <p class="text-neutral-500">Pastikan nama merchant adalah Warkop KUY dan nominal sesuai.</p>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
-                                    4</div>
-                                <p class="text-neutral-500">Masukkan PIN Anda dan selesaikan pembayaran.</p>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
-                                    5</div>
-                                <p class="text-neutral-500">Tunggu sampai halaman berubah otomatis.</p>
-                            </div>
+
+                            @if($payment->method == 'qris')
+
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
+                                        1</div>
+                                    <p class="text-neutral-500">Buka aplikasi mobile banking atau e-wallet.</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
+                                        2</div>
+                                    <p class="text-neutral-500">Pilih fitur scan QRIS dan arahkan kamera ke kode di layar.</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
+                                        3</div>
+                                    <p class="text-neutral-500">Pastikan nama merchant adalah Warkop KUY dan nominal sesuai.</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
+                                        4</div>
+                                    <p class="text-neutral-500">Masukkan PIN Anda dan selesaikan pembayaran.</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
+                                        5</div>
+                                    <p class="text-neutral-500">Tunggu sampai halaman berubah otomatis.</p>
+                                </div>
+
+                            @else
+
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
+                                        1</div>
+                                    <p class="text-neutral-500">Buka aplikasi mobile banking.</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
+                                        2</div>
+                                    <p class="text-neutral-500">Pilih transfer virtual account.</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
+                                        3</div>
+                                    <p class="text-neutral-500">Masukkan nomor VA.</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
+                                        4</div>
+                                    <p class="text-neutral-500">Pastikan nominal sesuai.</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="bg-brand-700 w-6 h-6 rounded-full items-center justify-center flex text-white text-xs">
+                                        5</div>
+                                    <p class="text-neutral-500">Selesaikan pembayaran.</p>
+                                </div>
+
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -91,67 +152,75 @@
             {{-- KOLOM KIRI: Detail Pesanan & Total --}}
 
             <!-- <div class="space-y-4">
-                            <div class="bg-red-50 p-4 rounded-md">
-                                <span class="text-sm font-medium text-red-700">Total Pembayaran</span>
-                                <span class="text-xl font-bold text-red-600">Rp
-                                    {{ number_format($order->total_price, 0, ',', '.') }}</span>
-                            </div>
+                <div class="bg-red-50 p-4 rounded-md">
+                    <span class="text-sm font-medium text-red-700">Total Pembayaran</span>
+                    <span class="text-xl font-bold text-red-600">Rp
+                        {{ number_format($order->total_price, 0, ',', '.') }}
+                    </span>
+                </div>
 
-                            {{-- Detail Item --}}
-                            <div class="text-sm text-gray-600 space-y-2 border-t pt-4">
-
-                                @foreach($order->orderItems as $item)
-                                    <div class="flex justify-between">
-                                        <span>{{ $item->qty }}x {{ $item->menu->name }}</span>
-                                        <span>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div> -->
+                {{-- Detail Item --}}
+                <div class="text-sm text-gray-600 space-y-2 border-t pt-4">
+                    @foreach($order->orderItems as $item)
+                        <div class="flex justify-between">
+                            <span>{{ $item->qty }}x {{ $item->menu->name }}</span>
+                            <span>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            </div> -->
         </div>
     </div>
 
     <script>
-        document.getElementById('pay-button').addEventListener('click', function () {
-            snap.pay('{{ $payment->payment_token }}', {
-                onSuccess: function (result) {
-                    window.location.href = "/payment/success/{{ $order->order_id }}";
-                },
-                onPending: function (result) {
-                    alert('Menunggu pembayaran');
-                },
-                onError: function (result) {
-                    alert('Pembayaran gagal');
-                }
-            });
-        });
+        function copyVA() {
+            navigator.clipboard.writeText(
+                document.getElementById('va-number').innerText
+            );
+            alert("Nomor VA berhasil disalin");
+        }
     </script>
 
     <script>
-        // Set durasi countdown dalam detik (15 menit = 900 detik)
-        let timeInSeconds = 15 * 60;
-        const display = document.getElementById('countdown');
 
+        const expired = new Date("{{ $payment->expires_at }}").getTime();
+        const display = document.getElementById("countdown");
         const countdown = setInterval(function () {
-            let minutes = Math.floor(timeInSeconds / 60);
-            let seconds = timeInSeconds % 60;
 
-            // Menambahkan angka 0 di depan jika angka kurang dari 10
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
+            const now = new Date().getTime();
+            const distance = expired - now;
 
-            display.innerHTML = "Bayar dalam " + minutes + ":" + seconds;
-
-            // Jika waktu habis
-            if (timeInSeconds <= 0) {
+            if (distance <= 0) {
                 clearInterval(countdown);
-                display.innerHTML = "Waktu pembayaran habis";
-                // Opsional: Redirect atau disable tombol bayar di sini
-                // window.location.reload(); 
+                display.innerHTML = "Pembayaran kadaluarsa";
+                return;
             }
 
-            timeInSeconds--;
+            const minutes = Math.floor(distance / 1000 / 60);
+            const seconds = Math.floor((distance / 1000) % 60);
+
+            display.innerHTML =
+                "Bayar dalam "
+                + String(minutes).padStart(2, "0")
+                + ":"
+                + String(seconds).padStart(2, "0");
         }, 1000);
+
+    </script>
+
+    <script>
+        setInterval(function () {
+            fetch("{{ route('payment.status', $order->order_id) }}")
+
+                .then(res => res.json())
+                .then(data => {
+
+                    if (data.status == "paid") {
+                        window.location.href =
+                            "{{ route('payment.success', $order->order_id) }}";
+                    }
+                });
+        }, 3000);
     </script>
 
 @endsection

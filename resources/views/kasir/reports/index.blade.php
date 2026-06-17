@@ -67,13 +67,16 @@
     Filter Laporan
 </h3>
 
+
+
 <form method="GET">
 
-    <div class="grid md:grid-cols-3 gap-4">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-6">
+
+    <form method="GET" class="flex flex-wrap gap-3 items-end">
 
         <div>
-
-            <label class="block text-sm mb-2">
+            <label class="block text-sm font-medium mb-1">
                 Tanggal Awal
             </label>
 
@@ -81,14 +84,12 @@
                 type="date"
                 name="start_date"
                 value="{{ request('start_date') }}"
-                class="w-full border rounded-lg px-4 py-3"
+                class="border rounded-lg px-3 py-2"
             >
-
         </div>
 
         <div>
-
-            <label class="block text-sm mb-2">
+            <label class="block text-sm font-medium mb-1">
                 Tanggal Akhir
             </label>
 
@@ -96,23 +97,30 @@
                 type="date"
                 name="end_date"
                 value="{{ request('end_date') }}"
-                class="w-full border rounded-lg px-4 py-3"
+                class="border rounded-lg px-3 py-2"
             >
-
         </div>
 
-        <div class="flex items-end">
+        <button
+            type="submit"
+            class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg"
+        >
+            Filter
+        </button>
 
-            <button
-                type="submit"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
-            >
-                Filter
-            </button>
+    </form>
 
-        </div>
+    <a
+        href="{{ route('kasir.reports.print', request()->all()) }}"
+        target="_blank"
+        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-center"
+    >
+        📄 Cetak PDF
+    </a>
 
-    </div>
+</div>
+
+    
 
 </form>
 

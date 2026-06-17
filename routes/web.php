@@ -61,6 +61,11 @@ Route::get(
     [CartController::class, 'simulatePayment']
 )->name('payment.simulate');
 
+Route::get(
+    '/payment/status/{order}',
+    [CartController::class, 'paymentStatus']
+)->name('payment.status');
+
 Route::post('/midtrans/callback', [MidtransController::class, 'callback']);
 Route::get('/midtrans/complete', [MidtransController::class, 'complete'])->name('midtrans.complete');
 
@@ -90,11 +95,7 @@ Route::middleware([
         'index'
     ])->name('kasir.dashboard');
 
-     Route::get(
-    '/kasir/tables/{table}',
-    [KasirTableController::class, 'show']
-)->name('kasir.tables.show');
-
+    
     Route::get('/kasir/orders', [
         OrderController::class,
         'index'
@@ -199,7 +200,43 @@ Route::middleware([
     [ReportController::class, 'index']
     )->name('kasir.reports');
 
+    Route::get(
+    '/kasir/reports/print',
+    [ReportController::class, 'print']
+)->name('kasir.reports.print');
+
+    // ROUTE MEJA
+
+Route::get(
+    '/kasir/tables/create',
+    [KasirTableController::class, 'create']
+)->name('kasir.tables.create');
+
+Route::post(
+    '/kasir/tables',
+    [KasirTableController::class, 'store']
+)->name('kasir.tables.store');
+
+Route::get(
+    '/kasir/tables/{table}/edit',
+    [KasirTableController::class, 'edit']
+)->name('kasir.tables.edit');
+
+Route::put(
+    '/kasir/tables/{table}',
+    [KasirTableController::class, 'update']
+)->name('kasir.tables.update');
+
+Route::delete(
+    '/kasir/tables/{table}',
+    [KasirTableController::class, 'destroy']
+)->name('kasir.tables.destroy');
    
+ Route::get(
+    '/kasir/tables/{table}',
+    [KasirTableController::class, 'show']
+)->name('kasir.tables.show');
+
     
 
 });
@@ -225,3 +262,4 @@ Route::middleware(['auth', 'role:dapur'])->group(function () {
     Route::post('/dapur/orders/{order}/served', [KitchenController::class, 'servedOrder'])
         ->name('dapur.orders.served');
 });
+

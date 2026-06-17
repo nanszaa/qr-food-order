@@ -12,18 +12,14 @@ class MidtransController extends Controller
 {
     public function callback(Request $request)
     {
-
-
-      \Log::info('MIDTRANS CALLBACK MASUK');
-    \Log::info($request->all());
-
-    MidtransService::init();
+        MidtransService::init();
 
         $notification = new Notification();
 
         $transactionStatus = $notification->transaction_status;
         $fraudStatus = $notification->fraud_status ?? null;
         $orderCode = $notification->order_id;
+        $transactionId = $notification->transaction_id;
 
         $order = Order::where('order_code', $orderCode)->first();
 
@@ -55,6 +51,7 @@ class MidtransController extends Controller
             $payment->update([
                 'status' => 'paid',
                 'paid_at' => now(),
+                'transaction_id' => $transactionId,
             ]);
 
             $order->update([
@@ -66,9 +63,7 @@ class MidtransController extends Controller
         |--------------------------------------------------------------------------
         | PENDING
         |--------------------------------------------------------------------------
-        */
-
-        elseif ($transactionStatus == 'pending') {
+        */ elseif ($transactionStatus == 'pending') {
 
             $payment->update([
                 'status' => 'pending',
@@ -79,9 +74,7 @@ class MidtransController extends Controller
         |--------------------------------------------------------------------------
         | EXPIRED
         |--------------------------------------------------------------------------
-        */
-
-        elseif ($transactionStatus == 'expire') {
+        */ elseif ($transactionStatus == 'expire') {
 
             $payment->update([
                 'status' => 'expired',
@@ -96,9 +89,7 @@ class MidtransController extends Controller
         |--------------------------------------------------------------------------
         | FAILED
         |--------------------------------------------------------------------------
-        */
-
-        elseif (
+        */ elseif (
             $transactionStatus == 'cancel' ||
             $transactionStatus == 'deny'
         ) {

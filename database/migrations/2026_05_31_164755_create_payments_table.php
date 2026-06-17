@@ -21,7 +21,9 @@ return new class extends Migration
                 ->on('orders')
                 ->cascadeOnDelete();
 
-            $table->string('payment_token')->nullable();
+            $table->string('transaction_id')->nullable();
+
+            $table->longText('payment_data')->nullable();
 
             $table->string('method');
 

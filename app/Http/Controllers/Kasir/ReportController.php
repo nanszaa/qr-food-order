@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderItem;
 use App\Models\Menu;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 class ReportController extends Controller
 {
     public function index(Request $request)
@@ -98,6 +99,58 @@ class ReportController extends Controller
                 'todayTransactions',
                 'bestSellingMenus'
             )
+        );
+    }
+
+    public function print(Request $request)
+    {
+        $payments = Payment::with('order')
+            ->where('status', 'paid');
+
+        if (
+            $request->start_date &&
+            $request->end_date
+        ) {
+            $payments->whereDate(
+                'paid_at',
+                '>=',
+                $request->start_date
+            );
+
+            $payments->whereDate(
+                'paid_at',
+                '<=',
+                $request->end_date
+            );
+        }
+
+        $payments = $payments
+            ->latest()
+            ->get();
+
+        $totalRevenue = $payments->sum('amount');
+
+        $bestSellingMenus = OrderItem::select(
+            'menu_id',
+            DB::raw('SUM(quantity) as total_sold')
+        )
+            ->with('menu')
+            ->groupBy('menu_id')
+            ->orderByDesc('total_sold')
+            ->take(5)
+            ->get();
+
+        $pdf = Pdf::loadView(
+            'kasir.reports.pdf',
+            compact(
+                'payments',
+                'totalRevenue',
+                'bestSellingMenus'
+            )
+        );
+
+        return $pdf->stream(
+            'laporan-penjualan.pdf'
         );
     }
 }

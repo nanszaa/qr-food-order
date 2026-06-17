@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Models\Table;
 use App\Http\Controllers\Controller;
 
+
 class TableController extends Controller
 {
     public function scan($token)

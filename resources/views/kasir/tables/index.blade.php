@@ -6,6 +6,8 @@
 
 @section('content')
 
+   
+
     {{-- Summary Card --}}
 
     <div class="flex gap-4 mb-8 flex-wrap">
@@ -25,6 +27,17 @@
         <div class="bg-white rounded-xl px-5 py-3 shadow-sm border border-gray-100">
             🔵 Kitchen ({{ $kitchenCount }})
         </div>
+
+    </div>
+
+     <div class="flex justify-end mb-6">
+
+        <a href="{{ route('kasir.tables.create') }}"
+            class="bg-green-700 hover:bg-green-800 text-white px-5 py-3 rounded-lg">
+
+            + Tambah Meja
+
+        </a>
 
     </div>
 
@@ -101,10 +114,35 @@
 
                 <div class="mt-6">
 
-                   <a href="{{ route('kasir.tables.show', $table) }}"
-   class="block text-center bg-green-700 hover:bg-green-800 text-white py-2 rounded-lg">
-    Open
-</a>
+                    <a href="{{ route('kasir.tables.show', $table) }}"
+                        class="block text-center bg-green-700 hover:bg-green-800 text-white py-2 rounded-lg">
+                        Open
+                    </a>
+
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 mt-3">
+
+                    <a href="{{ route('kasir.tables.edit', $table->id) }}"
+                        class="text-center bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg">
+
+                        Edit
+
+                    </a>
+
+                    <form action="{{ route('kasir.tables.destroy', $table->id) }}" method="POST">
+
+                        @csrf
+                        @method('DELETE')
+
+                        <button type="submit" onclick="return confirm('Hapus meja ini?')"
+                            class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg">
+
+                            Hapus
+
+                        </button>
+
+                    </form>
 
                 </div>
 

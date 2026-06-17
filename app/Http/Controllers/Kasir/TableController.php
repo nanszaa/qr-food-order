@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Kasir;
 
 use App\Models\Table;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 class TableController extends Controller
 {
     public function index()
@@ -85,4 +86,60 @@ class TableController extends Controller
             compact('table')
         );
     }
+
+    public function create()
+{
+    return view('kasir.tables.create');
+}
+
+public function store(Request $request)
+{
+    $request->validate([
+        'table_number' => 'required|unique:tables'
+    ]);
+
+    Table::create([
+        'table_number' => $request->table_number,
+        'qr_token' => Str::uuid(),
+        'is_active' => true,
+    ]);
+
+    return redirect()
+        ->route('kasir.tables')
+        ->with('success', 'Meja berhasil ditambahkan');
+}
+
+public function edit(Table $table)
+{
+    return view(
+        'kasir.tables.edit',
+        compact('table')
+    );
+}
+
+public function update(Request $request,Table $table)
+{
+    $request->validate([
+        'table_number' => 'required'
+    ]);
+
+    $table->update([
+        'table_number' => $request->table_number,
+        'is_active' => $request->has('is_active')
+    ]);
+
+    return redirect()
+        ->route('kasir.tables')
+        ->with('success', 'Meja berhasil diupdate');
+}
+
+public function destroy(Table $table)
+{
+    $table->delete();
+
+    return back()->with(
+        'success',
+        'Meja berhasil dihapus'
+    );
+}
 }

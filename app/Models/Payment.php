@@ -10,7 +10,8 @@ class Payment extends Model
 
     protected $fillable = [
         'order_id',
-        'payment_token',
+        'transaction_id',
+        'payment_data',
         'method',
         'amount',
         'status',
